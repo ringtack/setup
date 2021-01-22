@@ -1,4 +1,3 @@
-# SETUP
 My iTerm/git/vim/zsh setup!
 
 iTerm uses [Fira Code Nerd
