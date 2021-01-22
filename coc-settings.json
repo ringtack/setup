@@ -1,0 +1,11 @@
+ {
+  "eslint.filetypes": [
+    "javascript",
+    "typescript",
+    "typescriptreact",
+    "javascriptreact",
+    "typescript.tsx"
+  ],
+  "prettier.eslintIntegration": true,
+  "diagnostic.displayByAle": true
+}
