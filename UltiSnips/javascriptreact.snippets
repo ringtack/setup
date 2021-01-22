@@ -1,1 +1,195 @@
 extends javascript
+
+# Import
+snippet imr "import React" b
+import React from 'react'
+endsnippet
+
+snippet imrc "import React Component" b
+import React, { Component } from 'react';
+endsnippet
+
+snippet imrcp "import React PureComponent" b
+import React, { PureComponent } from 'react';
+endsnippet
+
+snippet imrs "import React useState" b
+import React, { useState } from 'react';
+endsnippet
+
+snippet imre "import React useEffect" b
+import React, { useEffect } from 'react';
+endsnippet
+
+snippet imrse "import React useState useEffect" b
+import React, { useState, useEffect } from 'react';
+endsnippet
+
+snippet imrh "import React hooks" b
+import React, { use$1 } from 'react';
+endsnippet
+
+snippet imrd "import ReactDOM" b
+import React-DOM from 'react-dom';
+endsnippet
+
+snippet imrr "import React Router" b
+import { BrowserRouter as Router, Route, NavLink} from 'react-router-dom';
+endsnippet
+
+snippet imbrc "import React Router Route, Switch, NavLink, Link" b
+import { Route, Switch, NavLink, Link } from react-router-dom';
+endsnippet
+
+# Lifecycle Methods
+snippet cdm "componentDidMount" b
+componentDidMount() {
+	${1}
+};
+endsnippet
+
+snippet cdup "componentDidUpdate" b
+componentDidUpdate(prevProps, prevState) {
+	${1}
+};
+endsnippet
+
+snippet cwm "componentWillMount" b
+componentWillMount() {
+	${1}
+};
+endsnippet
+
+snippet cwr "componentWillReceiveProps" b
+componentWillReceiveProps(nextProps) {
+	${1}
+};
+endsnippet
+
+snippet cwun "componentWillUnmount" b
+componentWillUnmount() {
+	${1}
+};
+endsnippet
+
+snippet cwu "componentWillUpdate" b
+componentWillUpdate(nextProps, nextState) {
+	${1}
+};
+endsnippet
+
+snippet scu "shouldComponentUpdate" b
+shouldComponentUpdate(nextProps, nextState) {
+	${1}
+}
+endsnippet
+
+snippet gsbu "getSnapshotBeforeUpdate" b
+getSnapshotBeforeUpdate(prevProps, prevState) {
+	${1}
+}
+endsnippet
+
+# Props
+snippet spt "static propTypes" b
+static propTypes = {
+	${1}: PropTypes.${2}
+};
+endsnippet
+
+snippet pt "propTypes" b
+${1}.propTypes = {
+	${2}: PropTypes.${2}
+};
+endsnippet
+
+snippet sdp "static defaultProps" b
+static defaultProps = {
+	${1}: ${2}	
+};
+endsnippet
+
+snippet dp "defaultProps" b
+${1}.defaultProps = {
+	${2}: ${3}
+};
+endsnippet
+
+snippet pp "props"
+	props.${1};
+endsnippet
+
+snippet tp "this props"
+this.props.${1};
+endsnippet
+
+# State
+snippet est "init state"
+this.state = {
+	${1}: ${2},
+};
+endsnippet
+
+snippet sst "set state"
+this.setState({
+	${1}: ${2}
+});
+endsnippet
+
+snippet tst "this state property"
+this.state.${1};
+endsnippet
+
+
+
+
+# Class components
+snippet rcc "react class component" b
+import React, { Component } from 'react';
+
+export default class ${1:`!p snip.rv = snip.basename`} extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			$2
+		}	
+	}
+	
+	$0
+
+	render() {
+		return(
+			<div>
+				$3
+			</div>
+		);
+	}
+}
+endsnippet
+
+snippet rpc "react class purecomponent" b
+import React, { PureComponent } from 'react';
+
+export default class ${1:`!p snip.rv = snip.basename`} extends PureComponent {
+	$0
+
+	render() {
+		return(
+			<div>
+				$2
+			</div>
+		)
+	}
+}
+endsnippet
+
+
+snippet ren "render" b
+render() {
+  return (
+    <div>
+      $1
+    </div>
+  )
+}
+endsnippet
