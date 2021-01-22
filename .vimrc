@@ -26,6 +26,9 @@ set secure
 " enable clicking and scrolling as expected
 set mouse+=a
 
+" have backspace work normally in insert mode
+set backspace=indent,eol,start
+
 " set leader key to comma
 let mapleader = ","
 " set localleader key to same key as leader
@@ -44,6 +47,10 @@ set number
 set relativenumber
 highlight LineNr ctermfg=black
 
+" change sign column place and highlight
+" autocmd VimEnter * set scl=auto
+" autocmd VimEnter * highlight SignColumn ctermbg=none
+
 " highlight current line
 " set cursorline
 
@@ -59,9 +66,6 @@ nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
-" have backspace work normally in insert mode
-set backspace=indent,eol,start
-
 " easily open location list for errors
 nnoremap <C-D> :CocDiagnostics<CR>
 
@@ -117,7 +121,7 @@ set textwidth=80
 " let &colorcolumn=join(range(81,999),",")
 
 " Create a vertical column at n
-set colorcolumn=110
+set colorcolumn=80
 hi ColorColumn ctermbg=0x545C58
 
 
@@ -692,6 +696,8 @@ let g:ale_fixers = {
  \ 'c': ['clang-format'],
  \ 'cpp': ['clang-format']
  \ }
+
+" Enable fix on save
 let g:ale_fix_on_save = 1
 
 " Enable compatibility with Coc
@@ -699,12 +705,17 @@ let g:ale_disable_lsp = 1
 
 " Customize linting highlights
 let g:ale_sign_error = '✘'
-let g:ale_sign_warning = '!!' " Warning symbol (U+26A0) ⚠
+let g:ale_sign_warning = '' " Warning symbol (U+26A0) ⚠
 highlight ALEErrorSign ctermbg=NONE ctermfg=red
 highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
+highlight ALEError ctermbg=NONE
+highlight ALEWarning ctermbg=NONE
+
+" Enable hover balloons
+" let g:ale_set_balloons=1
 
 " Always enable side gutter
-let g:ale_sign_column_always = 1
+" let g:ale_sign_column_always = 1
 
 
 
