@@ -133,11 +133,17 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+# Temp files created if multiple versions are open
+.*.*.swp
+
+
+
 ### react ###
 .DS_*
 logs
 **/*.backup.*
 **/*.back.*
+package-lock.json
 
 node_modules
 bower_components
