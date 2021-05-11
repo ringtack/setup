@@ -105,23 +105,25 @@ set incsearch
 
 " Set auto-indenting on for programming
 set ai
+" Enable smart indenting (is this even necessary)
+" set si
+" Enable C-indent
+set cindent
+" Enable most cracked indenting i guess
+set indentexpr=cindent
 
-" activates filetype detection
-filetype plugin indent on
 
-" activates syntax highlighting among other things
-syntax on
 
 " Enable softwrapping
 set wrap linebreak nolist
 " Enable hard wrapping at n
-set textwidth=80
+set textwidth=100
 
 " Create a vertical bar from 81-end
 " let &colorcolumn=join(range(81,999),",")
 
 " Create a vertical column at n
-set colorcolumn=80
+set colorcolumn=100
 hi ColorColumn ctermbg=0x545C58
 
 
@@ -157,6 +159,9 @@ inoremap <Right> <ESC>:echoe "Use l"<CR>
 inoremap <Up>    <ESC>:echoe "Use k"<CR>
 inoremap <Down>  <ESC>:echoe "Use j"<CR>
 
+" Remember meaningful j and k as jumps
+nnoremap <expr> k (v:count > 10 ? "m'" . v:count : '') . 'gk'
+nnoremap <expr> j (v:count > 10 ? "m'" . v:count : '') . 'gj'
 
 
 
@@ -178,6 +183,7 @@ call plug#begin()
 
 " add functionality to surround highlighted text
 Plug 'tpope/vim-surround'
+
 
 " LaTeX support
 Plug 'lervag/vimtex'
@@ -203,7 +209,6 @@ Plug 'tpope/vim-rhubarb'
 
 " HTML/CSS support for tags
 Plug 'mattn/emmet-vim'
-
 " Emmet Web API
 Plug 'mattn/webapi-vim'
 
@@ -235,8 +240,15 @@ Plug 'godlygeek/tabular'
 
 " Javascript support
 " Plug 'pangloss/vim-javascript'
+" Plug 'MaxMEllon/vim-jsx-pretty'
 Plug 'jelera/vim-javascript-syntax'
 Plug 'othree/javascript-libraries-syntax.vim'
+
+" Rust support
+Plug 'rust-lang/rust.vim'
+
+" Golang support
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
 " Auto Pairs
 Plug 'jiangmiao/auto-pairs'
@@ -265,7 +277,16 @@ call plug#end()
 
 
 
-" SURROUND CONFIG
+" activates filetype detection
+filetype plugin indent on
+
+" activates syntax highlighting among other things
+syntax enable
+
+
+
+
+" VIM-SURROUND CONFIG
 let g:surround_{char2nr('c')} = "\\\1command\1{\r}"
 
 
@@ -277,11 +298,11 @@ let g:vimtex_view_method='zathura'
 let g:vimtex_quickfix_mode=2
 let g:vimtex_quickfix_autoclose_after_keystrokes=2
 set ft=tex
-set conceallevel=2
+set conceallevel=0
 set encoding=utf8
 let g:vimtex_format_enabled=1 
 let g:vimtex_syntax_enabled=1
-let g:tex_conceal='abdmg'
+" let g:tex_conceal='abdmg'   " don't like conceal atm
 let g:tex_superscripts= "[0-9a-zA-W.,:;+-<>/()=]"
 let g:tex_subscripts= "[0-9aehijklmnoprstuvx,+-/().]"
 
@@ -364,6 +385,19 @@ let g:indentLine_char_list=['|', '¦', '┆', '┊']
 
 
 
+" BLAMER.NVIM CONFIG
+
+" make blamer faster and grey colored
+highlight Blamer guifg=lightgrey
+let g:blamer_delay = 150
+let g:blamer_enabled = 1
+let g:blamer_show_in_visual_modes = 0
+let g:blamer_show_in_insert_modes = 0 
+nnoremap <leader>b : call BlamerToggle()<cr>
+
+
+
+
 " VIM FUGITIVE CONFIG
 
 " Easy status
@@ -372,19 +406,6 @@ nmap <leader>gs :G<CR>
 " better diff management (useful when managing merges with vim-fugitive)
 nmap d2 :diffget //2<Cr>
 nmap d3 :diffget //3<Cr>
-
-
-
-
-" BLAMER.NVIM CONFIG
-
-" make blamer faster and grey colored
-highlight Blamer guifg=lightgrey
-let g:blamer_delay = 150
-let g:blamer_enabled = 1
-let g:blamer_show_in_visual_modes = 0
-" let g:blamer_show_in_insert_modes = 0 
-nnoremap <leader>b : call BlamerToggle()<cr>
 
 
 
@@ -424,7 +445,7 @@ map <C-n> :NERDTreeToggle<CR>
 
 " More configs
 " autocmd VimEnter * NERDTree | wincmd p
-let g:NERDTreeWinSize=30
+let g:NERDTreeWinSize=25
 
 
 " Close vim if the only window left open is NERDTree
@@ -484,14 +505,57 @@ let g:airline_solarized_bg='dark'
 " use airline's tabline too
 let g:airline#extensions#tabline#enabled = 1
 
+" remove separators for empty sections
+let g:airline_skip_empty_sections = 1
+
+" disable spell detection
+let g:airline_detect_spell=0
 
 
 
 
 " Auto Pairs
-let g:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', "`":"`", '```':'```', '"""':'"""', "'''":"'''", '<':'>', '<=': ''}
+let g:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', "`":"`", '"""':'"""', "'''":"'''"}
 " let g:AutoPairsShortcutFastWrap='<leader>w'
-imap <leader>w: <M-e>
+" imap <leader>w: <M-e>
+
+
+
+
+" RUST CONFIG
+
+" Format on save
+let g:rustfmt_autosave = 1
+
+" set tab width to 4 for Rust files
+au Filetype rust setl ts=4 sw=4
+
+
+
+
+" GO CONFIG
+
+" Auto-import dependencies
+let g:go_fmt_command = "gofmt"
+
+" Go code highlighting
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_types = 1
+
+" Enable highlighting of same variables
+let g:go_auto_sameids = 1
+
+" Show type info in line
+let g:go_auto_type_info = 1
+
+
+
 
 
 " FZF CONFIG
@@ -503,10 +567,10 @@ let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.4 } }
 map <C-p> :GFiles<CR>
 
 " Search files with Ctrl-o
-map <C-o> :Files<CR>
+" map <C-o> :Files<CR>
 
 " Search buffers with Ctrl-i
-map <C-i> :Buffers<CR>
+" map <C-i> :Buffers<CR>
 
 " Search directory of current file with Ctrl-u
 map <C-u> :FZF %:p:h<CR>
@@ -687,21 +751,36 @@ nmap <silent> <leader>k :ALEPreviousWrap<cr>
 nmap <leader>p :ALEFix<cr>
 
 " Enable ALE completion
-let g:ale_completion_enabled = 1
+" let g:ale_completion_enabled = 1
+
 
 " Set linters for different file types
+let g:ale_linters = {'rust': ['rustc', 'rls']}
+
+
+" Set fixers for different file types
 let g:ale_fixers = {
  \ 'javascript': ['prettier', 'eslint'],
  \ 'javascriptreact': ['prettier', 'eslint'],
+ \ 'typescript': ['prettier', 'eslint'],
+ \ 'typescriptreact': ['prettier', 'eslint'],
+ \ 'json': ['prettier'],
  \ 'c': ['clang-format'],
- \ 'cpp': ['clang-format']
+ \ 'cpp': ['clang-format'],
+ \ 'rust' : ['rustfmt'],
+ \ 'python': ['isort', 'autopep8'],
+ \ 'tex': ['latexindent']
  \ }
 
 " Enable fix on save
 let g:ale_fix_on_save = 1
 
 " Enable compatibility with Coc
-let g:ale_disable_lsp = 1
+" let g:ale_disable_lsp = 1
+
+" Enable compatibility with vim-airline
+let g:airline#extensions#ale#enabled = 1
+
 
 " Customize linting highlights
 let g:ale_sign_error = '✘'
@@ -740,7 +819,9 @@ let g:prettier#autoformat_require_pragma = 0
 " when running at every change you may want to disable quickfix
 let g:prettier#quickfix_enabled = 0
 
-" autocmd TextChanged,InsertLeave *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html PrettierAsync
+" enable format on save, I think?
+autocmd TextChanged,InsertLeave *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html PrettierAsync
+
 
 
 
@@ -753,5 +834,5 @@ let g:prettier#quickfix_enabled = 0
 " Javascript highlighting
 hi Operator ctermfg=magenta
 
-" Vimtex Conceal highlighting
+" VimTex Conceal highlighting
 autocmd VimEnter * hi Conceal ctermfg=cyan ctermbg=none cterm=bold

@@ -970,4 +970,4 @@ tags
 # Persistent undo
 [._]*.un~
 
-#
+# End of https://www.toptal.com/developers/gitignore/api/c,tex,vim,c++,java,maven,macos,latex,react,reactnative,intellij+all
