@@ -293,18 +293,36 @@ let g:surround_{char2nr('c')} = "\\\1command\1{\r}"
 
 
 " VIMTEX CONFIG
+set rtp+=~/current_course
 let g:tex_flavor='latex'
+" set pdf viewer to zathura
 let g:vimtex_view_method='zathura'
+
+" redirect build files to a build directory
+let g:vimtex_compiler_latexmk = {
+            \ 'build_dir' : 'build',
+            \}
+
+" automatically open quickfix window when errors occur, but stop from being the active window
 let g:vimtex_quickfix_mode=2
-let g:vimtex_quickfix_autoclose_after_keystrokes=2
+" automatically close quickfix window after 3 keystrokes
+let g:vimtex_quickfix_autoclose_after_keystrokes=3
+" prevent quickfix window from opening when only warnings are present
+let g:vimtex_quickfix_open_on_warning=0
+
+" set Vim filetype to tex
 set ft=tex
-set conceallevel=0
+" set text encoding to utf8
 set encoding=utf8
+" Enable formatting and syntax highlighting
 let g:vimtex_format_enabled=1 
 let g:vimtex_syntax_enabled=1
-" let g:tex_conceal='abdmg'   " don't like conceal atm
-let g:tex_superscripts= "[0-9a-zA-W.,:;+-<>/()=]"
-let g:tex_subscripts= "[0-9aehijklmnoprstuvx,+-/().]"
+
+" disable concealing LaTeX symbols; don't like it right now
+au Filetype tex setl conceallevel=0
+" let g:tex_conceal='abdmg'
+" let g:tex_superscripts= "[0-9a-zA-W.,:;+-<>/()=]"
+" let g:tex_subscripts= "[0-9aehijklmnoprstuvx,+-/().]"
 
 
 " ULTISNIPS CONFIG
@@ -382,6 +400,8 @@ let g:indentLine_conceallevel=2
 let g:indentLine_concealcursor='inc'
 let g:indentLine_char_list=['|', '¦', '┆', '┊']
 
+" Maintain normal conceal levels for other plugins
+let g:indentLine_setConceal=0
 
 
 
@@ -535,8 +555,8 @@ au Filetype rust setl ts=4 sw=4
 
 " GO CONFIG
 
-" Auto-import dependencies
-let g:go_fmt_command = "gofmt"
+" Set default formatter to gofmt
+let g:go_fmt_command = "goimports"
 
 " Go code highlighting
 let g:go_highlight_build_constraints = 1
@@ -554,6 +574,8 @@ let g:go_auto_sameids = 1
 " Show type info in line
 let g:go_auto_type_info = 1
 
+" Reuse terminal window
+let g:go_term_reuse = 1
 
 
 
@@ -755,7 +777,10 @@ nmap <leader>p :ALEFix<cr>
 
 
 " Set linters for different file types
-let g:ale_linters = {'rust': ['rustc', 'rls']}
+let g:ale_linters = {
+ \ 'rust': ['rustc', 'rls'],
+ \ 'tex': ['chktex', 'lacheck']
+ \ }
 
 
 " Set fixers for different file types
@@ -768,6 +793,7 @@ let g:ale_fixers = {
  \ 'c': ['clang-format'],
  \ 'cpp': ['clang-format'],
  \ 'rust' : ['rustfmt'],
+ \ 'go': ['gofmt'],
  \ 'python': ['isort', 'autopep8'],
  \ 'tex': ['latexindent']
  \ }
@@ -821,7 +847,6 @@ let g:prettier#quickfix_enabled = 0
 
 " enable format on save, I think?
 autocmd TextChanged,InsertLeave *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html PrettierAsync
-
 
 
 

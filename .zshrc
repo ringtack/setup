@@ -70,6 +70,8 @@ CASE_SENSITIVE="true"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git zsh-autosuggestions osx)
 
+bindkey '\t' autosuggest-accept
+
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
@@ -112,3 +114,13 @@ export DBUS_SESSION_BUS_ADDRESS="unix:path=$DBUS_LAUNCHD_SESSION_BUS_SOCKET"
   [ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
 
 export PATH="/usr/local/sbin:$PATH"
+
+# Set Java version to 11.0.1
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-11.0.1.jdk/Contents/Home
+
+# Add Racket to environment path
+export PATH=$PATH:/Applications/Racket\ v7.7/bin/
+
+# Add Go to environment path
+export GOPATH=$HOME/Go
+export PATH=$PATH:$GOPATH/bin
