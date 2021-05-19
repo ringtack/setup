@@ -51,3 +51,5 @@
   hunk-header-decoration-style = yellow box
 [pull]
 	rebase = false
+[init]
+	defaultBranch = main

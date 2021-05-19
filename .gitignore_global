@@ -1,4 +1,6 @@
 # Modified from https://www.toptal.com/developers/gitignore/api/c,vim,tex,c++,java,react,latex,macos,maven,reactnative,intellij+all,rust,go
+# Add more languages at https://www.toptal.com/developers/gitignore?templates=c,vim,tex,c++,java,react,latex,macos,maven,reactnative,intellij+all,rust,go
+
 
 ### C ###
 # Prerequisites
