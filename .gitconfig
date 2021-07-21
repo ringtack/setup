@@ -3,8 +3,7 @@
 # Please adapt and uncomment the following lines:
 	name = Richard Tang
 	email = ringtack2002@gmail.com
-#	name = Richard Tang
-#	email = ringtack@Richards-MacBook-Pro.local
+
 [alias]
 	graph = log --all --graph --decorate --oneline
 	last = log -1 HEAD
