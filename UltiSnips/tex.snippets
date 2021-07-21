@@ -9,51 +9,151 @@ def env(name):
 endglobal
 
 
-snippet template "Basic template" b
-\documentclass{article}
-\usepackage[margin=1in]{geometry}
-\usepackage{amsmath,amsthm,amssymb,amsfonts, fancyhdr, color, comment, graphicx, environ, dsfont, centernot, esint}
-\usepackage{xcolor}
-\usepackage{mathrsfs}
-\usepackage{mdframed}
-\usepackage[shortlabels]{enumitem}
-\usepackage{indentfirst}
-\usepackage{hyperref}
-\usepackage{bookmark}
-\hypersetup{
-    colorlinks=true,
-    linkcolor=blue,
-    filecolor=magenta,
-    urlcolor=blue,
-}
 
+################################################
+###########  Math Notes v1 Snippets  ###########
+################################################
 
-\newtheorem{theorem}{Theorem}
-\newtheorem{corollary}[theorem]{Corollary}
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{proposition}[theorem]{Proposition}
+snippet makeclass "Math Notes v1 make class" b
+% Refer to the package for copyright information.
 
-\theoremstyle{definition}
-\newtheorem{remark}[theorem]{Remark}
-\newtheorem{example}[theorem]{Example}
-\newtheorem{definition}[theorem]{Definition}
-\newcommand{\Z}{\mathds{Z}}
-\newcommand{\N}{\mathds{N}}
-\newcommand{\R}{\mathds{R}}
-\newcommand{\Q}{\mathds{Q}}
-\newcommand{\O}{\mathds{O}}
+\documentclass{math-notes-v1/notes}
 
-\pagestyle{fancy}
-
-\title{\textbf{$1}}
-\author{$2}
-\date{$3}
+%%%%% Optional bibliography; I don't use right now %%%%%
+% \addbibresource{${4:bib_resource}}
 
 \begin{document}
-	\maketitle
-	$0
+
+\maketitlepage{${1:course_title}}{${2:course_number}}{${3:course_professor}}
+
+
+%%%%% Include subfiles (i.e. individual chapters) %%%%%
+\subfile{${5:ch1.tex}}
+$0
+
+
+
+%%%%% Generate bibliography %%%%%
+% \makebibliography
+
 \end{document}
 endsnippet
+
+snippet "make(hw|rs)" "make hw or rs" rb
+\documentclass{`!p snip.rv = ('homework' if (match.group(1) == 'hw') else 'review-sheet')`}
+\homework{$1}
+
+\begin{document}
+$0
+
+
+
+\end{document}
+endsnippet
+
+snippet makechp "make chapter" b
+\documentclass[${1:main.tex}]{subfiles}
+\begin{document}
+
+\chapter{$2}
+$0
+
+
+
+
+\end{document}
+endsnippet
+
+
+##############################
+###### GENERAL SNIPPETS ######
+##############################
+
+priority 100
+context "math()"
+snippet "(\"\")" "text in math mode" riA
+~\text{$1}~$0
+endsnippet
+
+priority 10
+snippet "(\"\")" "text in text mode" riA
+\`\`$1''$0
+endsnippet
+
+snippet defn "make definition" bA
+\begin{definition}[${1:defn_name}]{$2}
+  $3
+\end{definition}
+$0
+endsnippet
+
+snippet thm "make theorem" bA
+\begin{theorem}[${1:thm_name}]{$2}
+  $3
+\end{theorem}
+$0
+endsnippet
+
+snippet prop "make proposition" bA
+\begin{proposition}[${1:prop_name}]{$2}
+  $3
+\end{proposition}
+$0
+endsnippet
+
+snippet lemma "make lemma" bA
+\begin{lemma}[${1:lemma_name}]{$2}
+	$3
+\end{lemma}
+$0
+endsnippet
+
+snippet corollary "make corollary" bA
+\begin{corollary}[${1:corollary_name}]{$2}
+  $3
+\end{corollary}
+$0
+endsnippet
+
+snippet prob "make problem" bA
+\begin{problem}{$1}
+  $2
+\end{problem}
+$0
+endsnippet
+
+snippet exmp "make example" bA
+\begin{example}
+	$1
+\end{example}
+$0
+endsnippet
+
+snippet rmk "make remark" bA
+\begin{remark}
+	$1
+\end{remark}
+$0
+endsnippet
+
+
+snippet soln "make solution" bA
+\begin{solution}
+	$0
+\end{solution}
+endsnippet
+
+
+snippet proof "make proof" bA
+\begin{proof}[Proof]
+  $1
+\end{proof}
+$0
+endsnippet
+
+######################################
+###### General purpose snippets ######
+######################################
 
 snippet beg "begin{} / end{}" bA
 \\begin{$1}
@@ -87,7 +187,7 @@ snippet fig "Figure environment" b
 endsnippet
 
 snippet enum "Enumerate" bA
-\begin{enumerate}
+\begin{enumerate}[${1:label=(\alph*)}]
 	\item $0
 \end{enumerate}
 endsnippet
@@ -121,13 +221,17 @@ snippet iff "iff" Ai
 \iff
 endsnippet
 
+# snippet mk "Math" wA
+# $${1}$`!p
+# if t[2] and t[2][0] not in [',', '.', '?', '-', ' ', ';',':']:
+	# snip.rv = ' '
+# else:
+	# snip.rv = ''
+# `$2
+# endsnippet
+
 snippet mk "Math" wA
-$${1}$`!p
-if t[2] and t[2][0] not in [',', '.', '?', '-', ' ']:
-	snip.rv = ' '
-else:
-	snip.rv = ''
-`$2
+$${1}$$2
 endsnippet
 
 snippet dm "Math" wA
@@ -224,6 +328,10 @@ snippet bmat "bmat" iA
 \begin{bmatrix} $1 \end{bmatrix} $0
 endsnippet
 
+snippet vmat "vmat" iA
+\begin{vmatrix} $1 \end{vmatrix} $0
+endsnippet
+
 context "math()"
 snippet () "left( right)" iA
 \left( ${1:${VISUAL}} \right) $0
@@ -241,6 +349,11 @@ snippet lr| "left| right|" i
 \left| ${1:${VISUAL}} \right| $0
 endsnippet
 
+context "math()"
+snippet {} "left{ right}" iA
+\\{ ${1:${VISUAL}} \\}
+endsnippet
+
 snippet lr{ "left\{ right\}" i
 \left\\{ ${1:${VISUAL}} \right\\} $0
 endsnippet
@@ -250,6 +363,10 @@ snippet lrb "left\{ right\}" i
 endsnippet
 
 snippet lr[ "left[ right]" i
+\left[ ${1:${VISUAL}} \right] $0
+endsnippet
+
+snippet [] "left[ right]" i
 \left[ ${1:${VISUAL}} \right] $0
 endsnippet
 
@@ -271,7 +388,7 @@ snippet taylor "taylor" w
 endsnippet
 
 snippet lim "limit" w
-\lim_{${1:n} \to ${2:\infty}} 
+\lim\limits_{${1:n} \to ${2:\infty}} 
 endsnippet
 
 snippet limsup "limsup" w
@@ -286,9 +403,14 @@ snippet part "d/dx" w
 \frac{\partial ${1:V}}{\partial ${2:x}} $0
 endsnippet
 
+# context "math()"
+# snippet sq "\sqrt{}" iA
+# \sqrt[$1]{${2:${VISUAL}}} $0
+# endsnippet
+
 context "math()"
 snippet sq "\sqrt{}" iA
-\sqrt{${1:${VISUAL}}} $0
+\sqrt{$1}$0
 endsnippet
 
 context "math()"
@@ -386,22 +508,66 @@ snippet R0+ "R0+" iA
 \\R_0^+
 endsnippet
 
-snippet plot "Plot" w
+snippet plot2d "2D Plot" w
+\begin{figure}[$1]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}
+      [scale=2,
+      tick label style={font=\scriptsize},
+      axis on top,
+      axis lines=center,
+      enlargelimits=0.1,
+      name=${2:myplot},
+      xmin=${3:-5}, xmax=${4:5},
+      ymin=${5:-5}, ymax=${6:5},
+      xlabel=$x$, ylabel=$y$]
+      $7
+    \end{axis}
+  \end{tikzpicture}
+  \caption*{$8}
+\end{figure}
+endsnippet
+
+snippet plot3d "3D Plot" w
 \begin{figure}[$1]
 	\centering
 	\begin{tikzpicture}
-		\begin{axis}[
-			xmin= ${2:-10}, xmax= ${3:10},
-			ymin= ${4:-10}, ymax = ${5:10},
-			axis lines = middle,
-		]
-			\addplot[domain=$2:$3, samples=${6:100}]{$7};
+		\begin{axis}
+       [scale=2,
+        tick label style={font=\scriptsize},
+        axis on top,
+        axis lines=center,
+        enlargelimits=0.1,
+        name=${2:myplot},
+        xmin=${3:-5}, xmax=${4:5},
+        ymin=${5:-5}, ymax=${6:5},
+        zmin=${7:-5}, zmax=${8:5},
+        xlabel=$x$, ylabel=$y$, zlabel=$z$]
+        $9
 		\end{axis}
 	\end{tikzpicture}
-	\caption{$8}
-	\label{${9:$8}}
+	\caption*{$10}
 \end{figure}
 endsnippet
+
+snippet draw "draw a vector" w
+\draw[->, red, thick] $0
+endsnippet
+
+
+snippet drawvec3d "Draw a vector with guides no regex" w
+\draw[->, red, thick] (0,0,0) -- ($1, $2, $3) node[above]{$$4$};
+\draw[red, dashed] ($1, 0, 0) -- ($1, $2, 0);
+\draw[red, dashed] (0, $2, 0) -- ($1, $2, 0);
+\draw[red, dashed] (0, 0, 0) -- ($1, $2, 0);
+\draw[red, dashed] (0, 0, $3) -- ($1, $2, $3);
+\draw[red, dashed] ($1, $2, 0) -- ($1, $2, $3);
+
+$0
+endsnippet
+
+
 
 snippet nn "Tikz node" w
 \node[$5] (${1/[^0-9a-zA-Z]//g}${2}) ${3:at (${4:0,0}) }{$${1}$};
@@ -432,6 +598,11 @@ snippet ** "cdot" iA
 \cdot 
 endsnippet
 
+snippet *8* "cdots" iA
+\cdots
+endsnippet
+
+
 context "math()"
 snippet norm "norm" iA
 \|$1\|$0
@@ -439,8 +610,8 @@ endsnippet
 
 priority 100
 context "math()"
-snippet '(?<!\\)(sin|cos|arccot|cot|csc|ln|log|exp|star|perp)' "ln" rwA
-\\`!p snip.rv = match.group(1)`
+snippet '(?<!\\)(sin|cos|arccot|cot|csc|ln|log|exp|star|perp|gcd|lcm|mod)' "ln" rwA
+\\`!p snip.rv = match.group(1)`{$1}$0
 endsnippet
 
 priority 199
@@ -457,15 +628,43 @@ endsnippet
 
 priority 200
 context "math()"
-snippet '(?<!\\)(arcsin|arccos|arctan|arccot|arccsc|arcsec|pi|zeta|int)' "ln" rwA
+snippet '(?<!\\)(arcsin|arccos|arctan|arccot|arccsc|arcsec|pi|int)' "ln" rwA
 \\`!p snip.rv = match.group(1)`
 endsnippet
 
+priority 200
+context "math()"
+snippet '(?<!\\)(alpha|beta|delta|phi|varphi|psi|rho|sigma|tau|theta|zeta)' "greek" rwA
+\\`!p snip.rv = match.group(1)`
+endsnippet
+
+priority 200
+context "math()"
+snippet '(?<!\\)(Hom|End|Gal)' "defined operators" rwA
+\\`!p snip.rv = match.group(1)`
+endsnippet
+
+priority 200
+context "math()"
+snippet '(?<!\\)(dim|det|deg|ker|Span|Char|range|Null|sgn)' "math operators" rwA
+\\`!p snip.rv = match.group(1)`{$1}$0
+endsnippet
+
+priority 200
+context "math()"
+snippet '(?<!\\)(GL|SL)' "linear groups" rwA
+\\`!p snip.rv = match.group(1)`_{$1}($2)$0
+endsnippet
 
 priority 100
 context "math()"
 snippet -> "to" iA
 \to 
+endsnippet
+
+context "math()"
+snippet incl "inclusion map" iA
+\hookrightarrow 
 endsnippet
 
 priority 200
@@ -491,7 +690,7 @@ endsnippet
 
 context "math()"
 snippet \\\ "setminus" iA
-\setminus
+\setminus 
 endsnippet
 
 snippet >> ">>" iA
@@ -509,19 +708,21 @@ endsnippet
 
 context "math()"
 snippet set "set" wA
-\\{$1\\} $0
+\\{$1\\mid $2\\} $0
 endsnippet
 
+context "math()"
 snippet || "mid" iA
- \mid 
+\mid 
 endsnippet
 
 
 context "math()"
 snippet cc "subset" Ai
-\subset 
+\subseteq 
 endsnippet
 
+context "math()"
 snippet notin "not in " iA
 \not\in 
 endsnippet
@@ -532,7 +733,7 @@ snippet inn "in " iA
 endsnippet
 
 snippet NN "n" iA
-\{N}
+\N$0
 endsnippet
 
 snippet Nn "cap" iA
@@ -552,19 +753,46 @@ snippet nnn "bigcap" iA
 endsnippet
 
 snippet OO "emptyset" iA
-\mathbb{O}
+\varnothing
 endsnippet
 
+snippet FF "field" iA
+\F
+endsnippet
 snippet RR "real" iA
-\{R}
+\R
 endsnippet
 
 snippet QQ "Q" iA
-\{Q}
+\Q
+endsnippet
+
+snippet II "I" iA
+\I
 endsnippet
 
 snippet ZZ "Z" iA
-\{Z}
+\Z
+endsnippet
+
+snippet CC "C" iA
+\C
+endsnippet
+
+snippet SS "S" iA
+\S 
+endsnippet
+
+snippet cS "symmetric group" iA
+\mc{S}_n
+endsnippet
+
+snippet cC "cyclic group" iA
+\mc{C}_n
+endsnippet
+
+snippet BB "basis" iA
+\mc{B}
 endsnippet
 
 snippet <! "normal" iA
@@ -604,6 +832,7 @@ snippet bigfun "Big function" iA
 .\end{align*}
 endsnippet
 
+priority 10
 snippet cvec "column vector" iA
 \begin{pmatrix} ${1:x}_${2:1}\\\\ \vdots\\\\ $1_${2:n} \end{pmatrix}
 endsnippet
@@ -638,19 +867,32 @@ snippet "([A-Za-z0-9])vec" "vec" riA
 \vec{`!p snip.rv=match.group(1)`}
 endsnippet
 
+priority 10
+context "math()"
+snippet vec "Vector" iA
+\vec{$1} $0
+endsnippet
+
 
 snippet letw "let omega" iA
 Let $\Omega \subset \C$ be open.
 endsnippet
 
 
-snippet HH "H" iA
-\{H}
+# snippet HH "H" iA
+# \{H}
+# endsnippet
+
+snippet HH "quaternions" iA
+\HH
 endsnippet
 
-snippet DD "D" iA
-\{D}
+snippet DD "dihedral group" iA
+\D_n
 endsnippet
+# snippet DD "D" iA
+# \{S}
+# endsnippet
 
 snippet box "Box"
 `!p snip.rv = '┌' + '─' * (len(t[1]) + 2) + '┐'`
@@ -665,22 +907,15 @@ endsnippet
 
 context "math()"
 snippet fun "fun" iA
-f: $1 \times $2 \to $3 $0
+$1: $2 \to $0
 endsnippet
 
 
 # Homework specific snippets
 
-snippet alph "Homework set environment" bA
-\begin{enumerate}[label=(\alph*)]
-\item
-$0
-\end{enumerate}
-endsnippet
-
 context "math()"
 snippet pdv "Partial derivative" wA
-\frac{\partial{$1}}{\partial{#2}}{$3} $0
+\frac{\partial{$1}}{\partial{$2}}{$3} $0
 endsnippet
 
 context "math()"
@@ -718,9 +953,208 @@ snippet subs "begin subsection" bA
 $0
 endsnippet
 
-snippet mag "magnitude" iA
+
+context "math()"
+snippet magn "magnitude" iA
 \lVert$1\rVert$0
 endsnippet
 
+
+context "math()"
+snippet amat "Augmented 2x3 matrix" iA
+\left(\begin{array}{cc|r}
+$0
+\end{array}\right)
+endsnippet
+
+
+
+context "math()"
+snippet s.t. "such that expansion" iA
+~\text{s.t.}~
+endsnippet
+
+snippet bbf "bold font" iA
+\textbf{$1} $0
+endsnippet
+
+snippet iit "italic font" iA
+\textit{$1} $0
+endsnippet
+
+snippet ttt "code font" iA
+\texttt{$1} $0
+endsnippet
+
+context "math()"
+snippet lmd "lambda" iA
+\lambda
+endsnippet
+
+context "math()"
+snippet comp "composition" iA
+\circ 
+endsnippet
+
+context "math()"
+snippet mapfun "map function" iA
+\begin{align*}
+  $1: $2 &\to $3 \\
+	$4 \mapsto $5 
+.\end{align*}
+$0
+endsnippet
+
+context "math()"
+snippet and "logical and" iA
+\land 
+endsnippet
+
+context "math()"
+snippet or "logical or" iA
+\lor 
+endsnippet
+
+context "math()"
+snippet xor "logical xor" iA
+\veebar
+endsnippet
+
+context "math()"
+snippet neg "logical not" iA
+\neg 
+endsnippet
+
+context "math()"
+snippet +- "plus minus" iA
+\pm 
+endsnippet
+
+context "math()"
+snippet -+ "minus plus" iA
+\mp 
+endsnippet
+
+context "math()"
+snippet maca "support for mathcal" iA
+\mc{$1}$0
+endsnippet
+
+context "math()"
+snippet 0bf "bold face 0" iA
+\textbf{0}
+endsnippet
+
+context "math()"
+snippet dgr "degrees" iA
+^{\circ}
+endsnippet
+
+context "math()"
+snippet inf "infimum" iA
+\inf{$1}$0
+endsnippet
+
+context "math()"
+snippet sup "supremum" iA
+\sup{$1}$0
+endsnippet
+
+context "math()"
+snippet 0cut "0 cut" iA
+0^*
+endsnippet
+
+context "math()"
+snippet epsi "epsilon" iA
+\varepsilon
+endsnippet
+
+context "math()"
+snippet abs "absolute value" iA
+\left| $1 \right| $0
+endsnippet
+
+context "math()"
+snippet LVW "Set of all linear maps" iA
+\mc{L}(V,W)
+endsnippet
+
+context "math()"
+snippet LWV "Set of all linear maps in reverse" iA
+\mc{L}(W,V)
+endsnippet
+
+context "math()"
+snippet LVV "Linear operators set" iA
+\mc{L}(V)
+endsnippet
+
+context "math()"
+snippet MAT "Matrix of linear map" iA
+\mc{M}($1)$0
+endsnippet
+
+context "math()"
+snippet '([A-Z]_?.)::([A-Z])' "field extensions" rwA
+`!p snip.rv = '\\left[' + match.group(1) + ' : ' + match.group(2) + '\\right]'`
+endsnippet
+
+
+######################
+#### old template ####
+######################
+
+snippet template "Basic template" b
+\documentclass{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsthm,amssymb,amsfonts, fancyhdr, color, comment, graphicx, environ, dsfont, centernot, esint}
+\usepackage[labelformat=empty]{caption}
+\usepackage{pgfplots}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{mathrsfs}
+\usepackage{mdframed}
+\usepackage[shortlabels]{enumitem}
+\usepackage{indentfirst}
+\usepackage{hyperref}
+\usepackage{bookmark}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=blue,
+}
+
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{definition}[theorem]{Definition}
+\newcommand{\Z}{\mathds{Z}}
+\newcommand{\N}{\mathds{N}}
+\newcommand{\R}{\mathds{R}}
+\newcommand{\Q}{\mathds{Q}}
+\newcommand{\C}{\mathds{C}}
+
+\usetikzlibrary{3d}
+\pgfplotsset{compat=1.8}
+
+\pagestyle{fancy}
+
+\title{\textbf{$1}}
+\author{$2}
+\date{$3}
+
+\begin{document}
+	\maketitle
+	$0
+\end{document}
+endsnippet
 
 # vim:ft=snippets
