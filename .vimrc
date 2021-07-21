@@ -106,7 +106,7 @@ set incsearch
 " Set auto-indenting on for programming
 set ai
 " Enable smart indenting (is this even necessary)
-" set si
+set si
 " Enable C-indent
 set cindent
 " Enable most cracked indenting i guess
@@ -207,14 +207,6 @@ Plug 'APZelos/blamer.nvim'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
 
-" HTML/CSS support for tags
-Plug 'mattn/emmet-vim'
-" Emmet Web API
-Plug 'mattn/webapi-vim'
-
-" Rename HTML/XML tags
-Plug 'AndrewRadev/tagalong.vim'
-
 " File explorer
 Plug 'preservim/nerdtree' |
             \ Plug 'Xuyuanp/nerdtree-git-plugin' |
@@ -238,11 +230,26 @@ Plug 'preservim/nerdcommenter'
 " Format tables/equations/etc
 Plug 'godlygeek/tabular'
 
+" HTML/CSS support for tags
+Plug 'mattn/emmet-vim'
+" Emmet Web API
+Plug 'mattn/webapi-vim'
+
+" Rename HTML/XML tags
+Plug 'AndrewRadev/tagalong.vim'
 " Javascript support
 " Plug 'pangloss/vim-javascript'
 " Plug 'MaxMEllon/vim-jsx-pretty'
 Plug 'jelera/vim-javascript-syntax'
 Plug 'othree/javascript-libraries-syntax.vim'
+
+""" C/C++ support """
+" Quick header/code swapping
+Plug 'vim-scripts/a.vim'
+
+" Advanced syntax highlighting
+Plug 'octol/vim-cpp-enhanced-highlight'
+
 
 " Rust support
 Plug 'rust-lang/rust.vim'
@@ -410,7 +417,7 @@ let g:indentLine_setConceal=0
 " make blamer faster and grey colored
 highlight Blamer guifg=lightgrey
 let g:blamer_delay = 150
-let g:blamer_enabled = 1
+let g:blamer_enabled = 0
 let g:blamer_show_in_visual_modes = 0
 let g:blamer_show_in_insert_modes = 0 
 nnoremap <leader>b : call BlamerToggle()<cr>
@@ -542,6 +549,18 @@ let g:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', "`":"`", '"""':'""
 
 
 
+" C/C++ Syntax Highlighting
+let g:cpp_class_scope_highlight = 1
+let g:cpp_member_variable_highlight = 1
+let g:cpp_class_decl_highlight = 1
+let g:cpp_posix_standard = 1
+let g:cpp_experimental_simple_template_highlight = 1
+let g:cpp_concepts_highlight = 1
+
+
+
+
+
 " RUST CONFIG
 
 " Format on save
@@ -576,6 +595,39 @@ let g:go_auto_type_info = 1
 
 " Reuse terminal window
 let g:go_term_reuse = 1
+
+
+
+
+" GOTAGS CONFIG
+let g:tagbar_type_go = {
+	\ 'ctagstype' : 'go',
+	\ 'kinds'     : [
+		\ 'p:package',
+		\ 'i:imports:1',
+		\ 'c:constants',
+		\ 'v:variables',
+		\ 't:types',
+		\ 'n:interfaces',
+		\ 'w:fields',
+		\ 'e:embedded',
+		\ 'm:methods',
+		\ 'r:constructor',
+		\ 'f:functions'
+	\ ],
+	\ 'sro' : '.',
+	\ 'kind2scope' : {
+		\ 't' : 'ctype',
+		\ 'n' : 'ntype'
+	\ },
+	\ 'scope2kind' : {
+		\ 'ctype' : 't',
+		\ 'ntype' : 'n'
+	\ },
+	\ 'ctagsbin'  : 'gotags',
+	\ 'ctagsargs' : '-sort -silent'
+\ }
+set tags=tags;/
 
 
 
