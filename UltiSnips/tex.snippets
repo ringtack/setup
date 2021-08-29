@@ -371,7 +371,7 @@ snippet [] "left[ right]" i
 endsnippet
 
 snippet lra "leftangle rightangle" iA
-\left<${1:${VISUAL}} \right>$0
+\left<${1:${VISUAL}} \right> $0
 endsnippet
 
 context "math()"
@@ -610,7 +610,7 @@ endsnippet
 
 priority 100
 context "math()"
-snippet '(?<!\\)(sin|cos|arccot|cot|csc|ln|log|exp|star|perp|gcd|lcm|mod)' "ln" rwA
+snippet '(?<!\\)(sin|cos|arccot|cot|csc|ln|log|exp|star|perp|gcd|lcm|mod|Mod)' "ln" rwA
 \\`!p snip.rv = match.group(1)`{$1}$0
 endsnippet
 
@@ -626,7 +626,7 @@ snippet dint "integral" wA
 \int_{${1:-\infty}}^{${2:\infty}} ${3:${VISUAL}} $0
 endsnippet
 
-priority 200
+priority 150
 context "math()"
 snippet '(?<!\\)(arcsin|arccos|arctan|arccot|arccsc|arcsec|pi|int)' "ln" rwA
 \\`!p snip.rv = match.group(1)`
@@ -634,13 +634,13 @@ endsnippet
 
 priority 200
 context "math()"
-snippet '(?<!\\)(alpha|beta|delta|phi|varphi|psi|rho|sigma|tau|theta|zeta)' "greek" rwA
+snippet '(?<!\\)(alpha|beta|delta|gamma|phi|varphi|psi|rho|sigma|tau|theta|zeta)' "greek" rwA
 \\`!p snip.rv = match.group(1)`
 endsnippet
 
 priority 200
 context "math()"
-snippet '(?<!\\)(Hom|End|Gal)' "defined operators" rwA
+snippet '(?<!\\)(Hom|End|Gal|Aut|min|max)' "defined operators" rwA
 \\`!p snip.rv = match.group(1)`
 endsnippet
 
@@ -652,7 +652,7 @@ endsnippet
 
 priority 200
 context "math()"
-snippet '(?<!\\)(GL|SL)' "linear groups" rwA
+snippet '(?<!\\)(GL|SL|proj)' "linear groups, projection" rwA
 \\`!p snip.rv = match.group(1)`_{$1}($2)$0
 endsnippet
 
@@ -791,6 +791,10 @@ snippet cC "cyclic group" iA
 \mc{C}_n
 endsnippet
 
+snippet cP "projection/polynomial" iA
+\mc{P}_U
+endsnippet
+
 snippet BB "basis" iA
 \mc{B}
 endsnippet
@@ -828,7 +832,7 @@ endsnippet
 snippet bigfun "Big function" iA
 \begin{align*}
 	$1: $2 &\longrightarrow $3 \\\\
-	$4 &\longmapsto $1($4) = $0
+	$4 &\longmapsto $0
 .\end{align*}
 endsnippet
 
@@ -1005,25 +1009,25 @@ snippet mapfun "map function" iA
 $0
 endsnippet
 
-context "math()"
-snippet and "logical and" iA
-\land 
-endsnippet
+# context "math()"
+# snippet and "logical and" iA
+# \land 
+# endsnippet
 
-context "math()"
-snippet or "logical or" iA
-\lor 
-endsnippet
+# context "math()"
+# snippet or "logical or" iA
+# \lor 
+# endsnippet
 
-context "math()"
-snippet xor "logical xor" iA
-\veebar
-endsnippet
+# context "math()"
+# snippet xor "logical xor" iA
+# \veebar
+# endsnippet
 
-context "math()"
-snippet neg "logical not" iA
-\neg 
-endsnippet
+# context "math()"
+# snippet neg "logical not" iA
+# \neg 
+# endsnippet
 
 context "math()"
 snippet +- "plus minus" iA
@@ -1096,8 +1100,17 @@ snippet MAT "Matrix of linear map" iA
 endsnippet
 
 context "math()"
-snippet '([A-Z]_?.)::([A-Z])' "field extensions" rwA
+snippet '([A-Z]_?.{0,2})::([A-Z])' "field extensions" rwA
 `!p snip.rv = '\\left[' + match.group(1) + ' : ' + match.group(2) + '\\right]'`
+endsnippet
+
+snippet '(.)slg' "p-Sylow" rwA
+$`!p snip.rv = match.group(1)`$-Sylow subgroup
+endsnippet
+
+context "math()"
+snippet '([A-Z])bot' "orthogonal complement" rwA
+`!p snip.rv = match.group(1)`^{\\bot}
 endsnippet
 
 

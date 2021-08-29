@@ -247,6 +247,10 @@ Plug 'othree/javascript-libraries-syntax.vim'
 " Quick header/code swapping
 Plug 'vim-scripts/a.vim'
 
+""" Solidity Support """
+Plug 'TovarishFin/vim-solidity'
+Plug 'sohkai/syntastic-local-solhint'
+
 " Advanced syntax highlighting
 Plug 'octol/vim-cpp-enhanced-highlight'
 
@@ -330,6 +334,13 @@ au Filetype tex setl conceallevel=0
 " let g:tex_conceal='abdmg'
 " let g:tex_superscripts= "[0-9a-zA-W.,:;+-<>/()=]"
 " let g:tex_subscripts= "[0-9aehijklmnoprstuvx,+-/().]"
+
+" Latex specification, to prevent sluggish UI
+au BufNewFile,BufRead *.tex
+    \ set nocursorline |
+    \ set nornu |
+    \ set number |
+    \ let g:loaded_matchparen=1 |
 
 
 " ULTISNIPS CONFIG
@@ -847,7 +858,8 @@ let g:ale_fixers = {
  \ 'rust' : ['rustfmt'],
  \ 'go': ['gofmt'],
  \ 'python': ['isort', 'autopep8'],
- \ 'tex': ['latexindent']
+ \ 'tex': ['latexindent'],
+ \ 'markdown': ['pandoc']
  \ }
 
 " Enable fix on save
