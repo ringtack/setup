@@ -129,9 +129,9 @@ hi ColorColumn ctermbg=0x545C58
 
 
 " Change the cursor shape
-" let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-" let &t_SR = "\<Esc>]50;CursorShape=2\x7"
-" let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+let &t_SR = "\<Esc>]50;CursorShape=2\x7"
+let &t_EI = "\<Esc>]50;CursorShape=1\x7"
 
 " Enable cursor guide only in Vim
 let &t_ti.="\<Esc>]1337;HighlightCursorLine=true\x7"
@@ -181,8 +181,9 @@ call plug#begin()
 
 " LIST PLUGINS HERE
 
-" add functionality to surround highlighted text
+" add functionality to surround highlighted text, and easily replace word variants
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-abolish'
 
 
 " LaTeX support
@@ -246,13 +247,11 @@ Plug 'othree/javascript-libraries-syntax.vim'
 """ C/C++ support """
 " Quick header/code swapping
 Plug 'vim-scripts/a.vim'
-
-""" Solidity Support """
-Plug 'TovarishFin/vim-solidity'
-Plug 'sohkai/syntastic-local-solhint'
-
 " Advanced syntax highlighting
 Plug 'octol/vim-cpp-enhanced-highlight'
+
+""" Python Support """
+
 
 
 " Rust support
@@ -304,8 +303,14 @@ let g:surround_{char2nr('c')} = "\\\1command\1{\r}"
 
 
 " VIMTEX CONFIG
-set rtp+=~/current_course
+
+let g:tex_fast = "bMprs"
+
+" let g:vimtex_enabled = 0
+
+" set rtp+=~/current_course
 let g:tex_flavor='latex'
+
 " set pdf viewer to zathura
 let g:vimtex_view_method='zathura'
 
@@ -316,13 +321,16 @@ let g:vimtex_compiler_latexmk = {
 
 " automatically open quickfix window when errors occur, but stop from being the active window
 let g:vimtex_quickfix_mode=2
+
 " automatically close quickfix window after 3 keystrokes
 let g:vimtex_quickfix_autoclose_after_keystrokes=3
+
 " prevent quickfix window from opening when only warnings are present
 let g:vimtex_quickfix_open_on_warning=0
 
 " set Vim filetype to tex
 set ft=tex
+
 " set text encoding to utf8
 set encoding=utf8
 " Enable formatting and syntax highlighting
@@ -354,6 +362,9 @@ setlocal spell
 set spelllang=en_us
 inoremap <C-l> <c-g>u<Esc>[s1z=`]a<c-g>u
 hi SpellBad ctermbg=0x765757
+
+" Seems like I need this to function
+" set mmp=2000
 
 
 
@@ -483,7 +494,7 @@ map <C-n> :NERDTreeToggle<CR>
 
 " More configs
 " autocmd VimEnter * NERDTree | wincmd p
-let g:NERDTreeWinSize=25
+let g:NERDTreeWinSize=20
 
 
 " Close vim if the only window left open is NERDTree
@@ -842,7 +853,8 @@ nmap <leader>p :ALEFix<cr>
 " Set linters for different file types
 let g:ale_linters = {
  \ 'rust': ['rustc', 'rls'],
- \ 'tex': ['chktex', 'lacheck']
+ \ 'tex': ['chktex', 'lacheck'],
+ \ 'python': ['pylint']
  \ }
 
 
@@ -857,7 +869,7 @@ let g:ale_fixers = {
  \ 'cpp': ['clang-format'],
  \ 'rust' : ['rustfmt'],
  \ 'go': ['gofmt'],
- \ 'python': ['isort', 'autopep8'],
+ \ 'python': ['isort', 'black', 'autopep8'],
  \ 'tex': ['latexindent'],
  \ 'markdown': ['pandoc']
  \ }
@@ -910,7 +922,7 @@ let g:prettier#autoformat_require_pragma = 0
 let g:prettier#quickfix_enabled = 0
 
 " enable format on save, I think?
-autocmd TextChanged,InsertLeave *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html PrettierAsync
+" autocmd TextChanged,InsertLeave *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html PrettierAsync
 
 
 

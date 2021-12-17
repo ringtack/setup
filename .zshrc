@@ -68,7 +68,7 @@ CASE_SENSITIVE="true"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-autosuggestions osx)
+plugins=(git zsh-autosuggestions macos web-search copybuffer jsontools zsh-syntax-highlighting)
 
 bindkey '\t' autosuggest-accept
 
@@ -124,3 +124,9 @@ export PATH=$PATH:/Applications/Racket\ v7.7/bin/
 # Add Go to environment path
 export GOPATH=$HOME/Go
 export PATH=$PATH:$GOPATH/bin
+
+# configure shell environment for pyenv
+eval "$(pyenv init --path)"
+
+# Add Ruby to environment path
+export GEM_HOME="$HOME/.gem"

@@ -3,7 +3,6 @@
 # Please adapt and uncomment the following lines:
 	name = Richard Tang
 	email = ringtack2002@gmail.com
-
 [alias]
 	graph = log --all --graph --decorate --oneline
 	last = log -1 HEAD
@@ -21,6 +20,11 @@
 	autocorrect = 0
 [merge]
 	tool = vimdiff
+
+[pull]
+	rebase = false
+[init]
+	defaultBranch = main
 
 [interactive]
   diffFilter = delta --color-only
@@ -48,7 +52,3 @@
   file-style = bold yellow ul
   file-decoration-style = none
   hunk-header-decoration-style = yellow box
-[pull]
-	rebase = false
-[init]
-	defaultBranch = main

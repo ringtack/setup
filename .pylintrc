@@ -1,0 +1,9 @@
+[MASTER]
+
+disable= C0114,C0115,C0116,R0903,R0913,R0914
+
+# disable messages with the given IDs:
+# C0114,115,116: missing docstrings (module, class, function)
+# R0903: too few public methods
+# R0913: too many arguments
+# R0914: too many locals
