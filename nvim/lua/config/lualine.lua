@@ -9,9 +9,11 @@ require('lualine').setup{
             { 'mode', separator = { left = '' }, right_padding = 2 },
         },
         lualine_b = { 'filename', 'branch' },
-        lualine_c = { 'diff', 'diagnostics', 'fileformat' },
-        lualine_x = {},
-        lualine_y = { 'filetype', 'progress' },
+        lualine_c = { 
+            { 'diff', separator = { right = '' }, left_padding = 2 },
+        },
+        lualine_x = {'diagnostics'},
+        lualine_y = { 'fileformat', 'filetype', 'progress' },
         lualine_z = {
             { 'location', separator = { right = '' }, left_padding = 2 },
         },

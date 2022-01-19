@@ -10,12 +10,10 @@ cp -af "${CONFIG_DIR}/nvim/init.lua" nvim/init.lua
 
 # if lua/ or plugin/ don't exist, make them
 [[ -d nvim/lua ]] || mkdir nvim/lua
-[[ -d nvim/plugin ]] || mkdir nvim/plugin
-[[ -d nvim/plugin/config ]] || mkdir nvim/plugin/config
+[[ -d nvim/lua/config ]] || mkdir nvim/lua/config
 
 # copy files over
-cp -af "${CONFIG_DIR}/nvim/lua/." nvim/lua/
-cp -aRf "${CONFIG_DIR}/nvim/plugin/." nvim/lua/plugin/
+cp -aRf "${CONFIG_DIR}/nvim/lua/." nvim/lua/
 
 
 #### Kitty
