@@ -45,7 +45,7 @@ set expandtab
 " show relative line number
 set number
 set relativenumber
-highlight LineNr ctermfg=black
+highlight LineNr ctermfg=darkgray
 
 " change sign column place and highlight
 " autocmd VimEnter * set scl=auto
@@ -413,7 +413,7 @@ function! s:goyo_leave()
   AirlineToggle
   AirlineToggle
   AirlineRefresh
-  highlight LineNr ctermfg=black
+  " highlight LineNr ctermfg=black
 	hi ColorColumn ctermbg=0x545C58
 endfunction
 
@@ -854,7 +854,8 @@ nmap <leader>p :ALEFix<cr>
 let g:ale_linters = {
  \ 'rust': ['rustc', 'rls'],
  \ 'tex': ['chktex', 'lacheck'],
- \ 'python': ['pylint']
+ \ 'python': ['pylint'],
+ \ 'cpp': ['cc']
  \ }
 
 
@@ -897,6 +898,12 @@ highlight ALEWarning ctermbg=NONE
 
 " Always enable side gutter
 " let g:ale_sign_column_always = 1
+
+" Set clang++ flags
+let g:ale_cpp_cc_options = '-Wall -O2 -std=c++17'
+let g:ale_cpp_clangtidy_extra_options = '-std=c++17'
+" let g:ale_cpp_clangd_options = '-Wall -O2 -std=c++17'
+" let g:ale_cpp_clangcheck_options = '-Wall -O2 -std=c++17'
 
 
 

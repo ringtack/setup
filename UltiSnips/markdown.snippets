@@ -1,0 +1,43 @@
+snippet iit "italics" iA
+*${1:${VISUAL}}*$0
+endsnippet
+
+snippet bbf "bold" iA
+**${1:${VISUAL}}**$0
+endsnippet
+
+snippet *** "bold italics" iA
+***${1:${VISUAL}}***$0
+endsnippet
+
+snippet cbl "Codeblock" b
+\`\`\`
+${1:${VISUAL}}
+\`\`\`
+$0
+endsnippet
+
+snippet strk "Strikethrough" iA
+~~${1:${VISUAL}}~~$0
+endsnippet
+
+
+snippet fnt "Footnote"
+[^${1:${VISUAL:Footnote}}]$0
+
+
+[^$1]:${2:Text}
+endsnippet
+
+
+
+snippet link "link" iA
+[${1:${VISUAL:Text}}](${2:https://www.url.com})$0
+endsnippet
+
+snippet img "image" iA
+![${1:alt text}]($2)$0
+endsnippet
+
+
+
