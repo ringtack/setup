@@ -115,6 +115,14 @@ return require('packer').startup(function()
     -- highlight indented lines
     use { 'lukas-reineke/indent-blankline.nvim', config = [[require('config.indent-blankline')]] }
 
+    -- dim inactive portions of code
+    use {
+        'folke/twilight.nvim',
+        config = [[require('config.twilight')]],
+        -- cmd = 'Twilight',
+        -- keys = {'<Leader>', 't', 'w'}
+    }
+
 
 
     -- Automatically set up your configuration after cloning packer.nvim

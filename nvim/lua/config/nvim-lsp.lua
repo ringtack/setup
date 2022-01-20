@@ -13,6 +13,7 @@ vim.diagnostic.config({
   float = {
     border = "rounded",
     focus = false,
+    show_header = false,
   },
   signs = true,
   underline = true,
