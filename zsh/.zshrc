@@ -68,7 +68,14 @@ CASE_SENSITIVE="true"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-autosuggestions macos web-search copybuffer jsontools zsh-syntax-highlighting)
+plugins=(
+  git
+  zsh-autosuggestions
+  # zsh-vi-mode
+  zsh-syntax-highlighting
+  macos
+  copybuffer
+)
 
 # Change autosuggestions keybind to escape ('\t' for Tab)
 bindkey '\t' autosuggest-accept
@@ -147,4 +154,5 @@ export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 # Configure gcc to latest versions
 export PATH=/usr/local/Cellar/gcc/11.2.0_3/bin:$PATH
 export PATH="/usr/local/opt/llvm/bin:$PATH"
+
 

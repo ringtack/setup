@@ -40,12 +40,14 @@ return require('packer').startup(function()
     use { 'windwp/nvim-autopairs', config = [[require('config.autopairs')]] }
 
     -- easier commenting
+    --  > toggle with <Leader>c<space>
     use { 'preservim/nerdcommenter', config = [[require('config.nerdcommenter')]] }
 
-    -- enable treesitter support in neovim
+    -- enable treesitter support for better syntax highlighting
     use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
 
     -- file explorer
+    --  > toggle with <C-n>
     use {
         'kyazdani42/nvim-tree.lua',
         requires = { 'kyazdani42/nvim-web-devicons' },
@@ -56,18 +58,21 @@ return require('packer').startup(function()
     use 'ludovicchabant/vim-gutentags'
     
     -- easily replace word variants
+    --  TODO: figure out how this works lol
     use 'tpope/vim-abolish'
 
 
 
     ---- LSP Support (linting, fixing/formatting, autocompletion)
     -- experimental; ideally switch from ALE to builtin Neovim LSP
-
+    
     -- ALE: linting, fixing, formatting
     use { 'dense-analysis/ale', config = [[require('config.ale')]] }
 
-    -- Suggestions engine
+    -- Completions engine
     use { 'ms-jpq/coq_nvim', branch = 'coq', config = [[require('config.coq')]] }
+    -- Signature window
+    use 'ray-x/lsp_signature.nvim'
     -- Builtin Neovim LSP
     use { 'neovim/nvim-lspconfig', config = [[require('config.nvim-lsp')]] }
     -- Easy LSP installer
@@ -79,6 +84,7 @@ return require('packer').startup(function()
 
     ---- GIT SUPPORT
     -- blamer utility
+    --  > toggle with <Leader>b
     use {
         'APZelos/blamer.nvim',
         config = [[require('config.blamer')]],

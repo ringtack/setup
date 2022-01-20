@@ -13,8 +13,8 @@ gacp() {
 alias vssh="vagrant ssh"
 alias vupsh="vagrant up && vagrant ssh"
 
-# accept ssh into machines without kitty
-# alias ssh="kitty +kitten ssh"
-
 # migrate from vim -> neovim
 alias vim="nvim"
+
+# fzf default 25% height
+alias fzf="fzf --height=25%"
