@@ -59,3 +59,4 @@ o.hidden = true
 
 -- prevent shell scripts from executing
 o.secure = true
+

@@ -11,6 +11,10 @@ if fn.empty(fn.glob(install_path)) > 0 then
     packer_bootstrap = fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
 end
 
+-- manually set python executable for faster load times
+-- see https://www.redd.it/r9acxp/
+vim.g.python3_host_prog = '~/.pyenv/shims/python'
+
 -- Only required if you have packer configured as `opt`
 vim.cmd [[packadd packer.nvim]]
 
@@ -65,13 +69,9 @@ return require('packer').startup(function()
     -- Suggestions engine
     use { 'ms-jpq/coq_nvim', branch = 'coq', config = [[require('config.coq')]] }
     -- Builtin Neovim LSP
-    use {
-        'neovim/nvim-lspconfig',
-        config = [[require('config.nvim-lsp')]],
-        after = 'coq_nvim'
-    }
+    use { 'neovim/nvim-lspconfig', config = [[require('config.nvim-lsp')]] }
     -- Easy LSP installer
-    use { 'williamboman/nvim-lsp-installer', after = 'nvim-lspconfig' }
+    use { 'williamboman/nvim-lsp-installer' }
 
 
 
@@ -105,17 +105,9 @@ return require('packer').startup(function()
     use 'sheerun/vim-polyglot'
 
     -- statusline
-    use {
-        'nvim-lualine/lualine.nvim',
-        after = 'nvim-tree.lua',
-        config = [[require('config.lualine')]]
-    }
+    use { 'nvim-lualine/lualine.nvim', config = [[require('config.lualine')]] }
     -- bufferline
-    use {
-        'akinsho/bufferline.nvim',
-        after = 'nvim-tree.lua',
-        config = [[require('config.bufferline')]],
-    }
+    use { 'akinsho/bufferline.nvim', config = [[require('config.bufferline')]] }
 
     -- highlight indented lines
     use { 'lukas-reineke/indent-blankline.nvim', config = [[require('config.indent-blankline')]] }
