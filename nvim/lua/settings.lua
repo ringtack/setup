@@ -21,7 +21,7 @@ o.expandtab = true
 o.number = true
 o.relativenumber = true
 -- set line number colors to black
-cmd('hi LineNr ctermfg=darkgray')
+-- cmd('hi LineNr ctermfg=darkgray')
 
 -- case-insensitive searching unless something is capitalized
 o.ignorecase = true
@@ -35,7 +35,7 @@ o.linebreak = true
 o.textwidth = 100
 -- create vertical line at 100
 o.colorcolumn = '100'
-cmd('hi ColorColumn ctermbg=darkgray')
+-- cmd('hi ColorColumn ctermbg=darkgray')
 
 -- highlight current cursor line
 o.cursorline = true
@@ -45,6 +45,9 @@ o.cursorlineopt = 'screenline,number'
 vim.cmd('set termguicolors')
 -- set colorscheme to OneDark
 vim.cmd('colorscheme onedark')
+
+-- change search highlight
+cmd('hi Search guifg=bg guibg=Gray')
 
 
 

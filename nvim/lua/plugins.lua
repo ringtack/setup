@@ -40,14 +40,12 @@ return require('packer').startup(function()
     use { 'windwp/nvim-autopairs', config = [[require('config.autopairs')]] }
 
     -- easier commenting
-    --  > toggle with <Leader>c<space>
     use { 'preservim/nerdcommenter', config = [[require('config.nerdcommenter')]] }
 
     -- enable treesitter support for better syntax highlighting
     use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
 
     -- file explorer
-    --  > toggle with <C-n>
     use {
         'kyazdani42/nvim-tree.lua',
         requires = { 'kyazdani42/nvim-web-devicons' },
@@ -84,7 +82,6 @@ return require('packer').startup(function()
 
     ---- GIT SUPPORT
     -- blamer utility
-    --  > toggle with <Leader>b
     use {
         'APZelos/blamer.nvim',
         config = [[require('config.blamer')]],
