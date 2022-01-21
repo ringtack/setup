@@ -6,5 +6,5 @@ local map = vim.api.nvim_set_keymap
 map('n', '<leader>gs', ':G <CR>', {})
 
 -- Better diff management
-map('n', 'd2', ':diffget //2<CR>', {})
-map('n', 'd3', ':diffget //3<CR>', {})
+-- map('n', 'd2', ':diffget //2<CR>', {})
+-- map('n', 'd3', ':diffget //3<CR>', {})

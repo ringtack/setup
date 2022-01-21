@@ -49,3 +49,5 @@ nnoremap <expr> j (v:count > 10 ? "m'" . v:count : '') . 'gj'
 
 -- disable Ex mode, whatever that is
 map('n', 'Q', '<Nop>', {})
+
+

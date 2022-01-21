@@ -13,7 +13,7 @@ end
 
 -- manually set python executable for faster load times
 -- see https://www.redd.it/r9acxp/
-vim.g.python3_host_prog = '~/.pyenv/shims/python'
+vim.g.python3_host_prog = fn.expand('~/.pyenv/shims/python')
 
 -- Only required if you have packer configured as `opt`
 vim.cmd [[packadd packer.nvim]]
