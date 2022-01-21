@@ -37,13 +37,19 @@ return require('packer').startup(function()
     use 'tpope/vim-surround'
 
     -- autopairs
-    use { 'windwp/nvim-autopairs', config = [[require('config.autopairs')]] }
+    -- use { 'windwp/nvim-autopairs', config = [[require('config.autopairs')]] }
+    use 'jiangmiao/auto-pairs'
+    -- tab out of pairs
+    -- TODO: fix compatibility with coq
+    -- use 'abecodes/tabout.nvim'
 
     -- easier commenting
     use { 'preservim/nerdcommenter', config = [[require('config.nerdcommenter')]] }
 
     -- enable treesitter support for better syntax highlighting
-    use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
+    use 'p00f/nvim-ts-rainbow'
+
+    use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate', config = [[require('config.treesitter')]] }
 
     -- file explorer
     use {
@@ -71,11 +77,26 @@ return require('packer').startup(function()
     use { 'ms-jpq/coq_nvim', branch = 'coq', config = [[require('config.coq')]] }
     -- Signature window
     use 'ray-x/lsp_signature.nvim'
+
+    -- lightbulb on code actions
+    -- TODO: fix integration with the gutter
+    -- use { 
+        -- 'kosayoda/nvim-lightbulb',
+        -- config = function()
+            -- vim.cmd [[ autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb{sign={enabled=true,priority=11}} ]]
+        -- end
+    -- }
+    -- better code actions menu
+    -- note that the config is changed in config.nvim-lsp
+    use 'weilbith/nvim-code-action-menu'
+
+
+
+
     -- Builtin Neovim LSP
     use { 'neovim/nvim-lspconfig', config = [[require('config.nvim-lsp')]] }
     -- Easy LSP installer
     use { 'williamboman/nvim-lsp-installer' }
-
 
 
 

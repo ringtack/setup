@@ -42,7 +42,7 @@ map('v', '<A-k>', ":m '<-2<CR>gv=gv", options)
 nvim_exec([[
 nnoremap <expr> k (v:count > 10 ? "m'" . v:count : '') . 'gk'
 nnoremap <expr> j (v:count > 10 ? "m'" . v:count : '') . 'gj'
-]], false);
+]], false)
 
 
 
