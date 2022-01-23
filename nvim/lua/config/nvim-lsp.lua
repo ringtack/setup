@@ -14,6 +14,7 @@ vim.diagnostic.config({
     border = "rounded",
     focus = false,
     show_header = false,
+    source = "if_many",
   },
   signs = true,
   underline = true,
@@ -28,6 +29,7 @@ vim.cmd('hi FloatBorder guifg=DarkGray')
 o.updatetime = 200
 vim.cmd([[
 autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false, border="rounded", show_header=false})
+autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb{sign={enabled=true,priority=12}}
 ]])
 
 
@@ -51,6 +53,7 @@ local coq = require('coq')
 -- handlers to redefine function configs
 local handlers =  {
   ["textDocument/hover"] =  vim.lsp.with(vim.lsp.handlers.hover, {border = "rounded"}),
+  ["textDocument/codeAction"] = vim.lsp.with(vim.lsp.handlers.code_action, nil)
 }
 
 -- helper function to attach signature
@@ -58,13 +61,13 @@ local on_attach_lsp_signature = function(client, bufnr)
   require('lsp_signature').on_attach({
       bind = true, -- This is mandatory, otherwise border config won't get registered.
       floating_window = true, -- false for virtual text only
-      floating_window_above_cur_line = true, -- not always above line
+      floating_window_above_cur_line = true,
       -- floating_window_off_y = 30,
       transparency = 20,
       handler_opts = {
         border = "rounded"
       },
-      doc_lines = 0,   -- restrict documentation shown
+      doc_lines = 2,   -- restrict documentation shown
       zindex = 50,     -- <=50 so that it does not hide completion preview.
       fix_pos = false, -- Let signature window change its position when needed
       toggle_key = '<A-x>',  -- Press <Alt-x> to toggle signature on and off.
@@ -76,6 +79,10 @@ end
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+  -- disable nvim-lsp formatting; use null-ls for formatting
+  client.resolved_capabilities.document_formatting = false
+  client.resolved_capabilities.document_range_formatting = false
 
   -- Activate LSP signature on attach.
   on_attach_lsp_signature(client, bufnr)
@@ -100,7 +107,7 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<Leader>k', '<cmd>lua vim.diagnostic.goto_prev({float={border="rounded"}})<CR>', opts)
   buf_set_keymap('n', '<Leader>j', '<cmd>lua vim.diagnostic.goto_next({float={border="rounded"}})<CR>', opts)
   buf_set_keymap('n', '<Leader>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
-  -- buf_set_keymap('n', '<Leader>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+  buf_set_keymap('n', '<Leader>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
 
   -- Highlight symbol under cursor
   if client.resolved_capabilities.document_highlight then
@@ -117,13 +124,29 @@ local on_attach = function(client, bufnr)
   end
 end
 
-local servers = { 'bashls', 'clangd', 'pyright', 'rust_analyzer', 'tsserver' }
+local servers = {
+  'bashls',
+  'clangd',
+  'eslint',
+  'gopls',
+  'pyright',
+  'jedi_language_server',
+  'rust_analyzer',
+  'sumneko_lua',
+  'tsserver'
+}
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.offsetEncoding = { "utf-16" }
+
 for _, lsp in ipairs(servers) do
-  nvim_lsp[lsp].setup {
+  nvim_lsp[lsp].setup({
+  -- nvim_lsp[lsp].setup(require('coq').lsp_ensure_capabilities({
     on_attach = on_attach,
     handlers = handlers,
+    capabilities = capabilities,
     flags = {
       debounce_text_changes = 150,
-    }
-  }
+    },
+  -- }))
+  })
 end

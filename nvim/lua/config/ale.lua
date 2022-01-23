@@ -46,10 +46,11 @@ o.signcolumn = "number"
 -- }
 -- disable linters?
 g.ale_linters = {
+    cpp = {},
+    javascript = {},
+    python = {},
     rust = {},
     tex = {},
-    python = {},
-    cpp = {},
 }
 
 

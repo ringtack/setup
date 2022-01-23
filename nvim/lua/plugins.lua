@@ -5,7 +5,7 @@ local fn = vim.fn
 local cmd = vim.cmd
 local opt = vim.opt
 
--- Automatically install Packer if not already 
+-- Automatically install Packer if not already
 local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
 if fn.empty(fn.glob(install_path)) > 0 then
     packer_bootstrap = fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
@@ -30,7 +30,8 @@ vim.cmd([[
 return require('packer').startup(function()
     -- Packer can manage itself
     use 'wbthomason/packer.nvim'
-    
+
+
 
     ---- UTILITIES
     -- surround highlighted text
@@ -51,6 +52,16 @@ return require('packer').startup(function()
 
     use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate', config = [[require('config.treesitter')]] }
 
+    -- telescope functionality
+    use {
+        'nvim-telescope/telescope.nvim',
+        requires = {
+            {'nvim-lua/plenary.nvim'},
+            { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
+        },
+        config = [[require('config.telescope')]],
+
+    }
     -- file explorer
     use {
         'kyazdani42/nvim-tree.lua',
@@ -60,7 +71,7 @@ return require('packer').startup(function()
 
     -- tag generation (navigate definitions with Ctrl-[])
     use 'ludovicchabant/vim-gutentags'
-    
+
     -- easily replace word variants
     --  TODO: figure out how this works lol
     use 'tpope/vim-abolish'
@@ -68,35 +79,26 @@ return require('packer').startup(function()
 
 
     ---- LSP Support (linting, fixing/formatting, autocompletion)
-    -- experimental; ideally switch from ALE to builtin Neovim LSP
-    
-    -- ALE: linting, fixing, formatting
-    use { 'dense-analysis/ale', config = [[require('config.ale')]] }
+
+    -- Formatting, Linting
+    use { 'jose-elias-alvarez/null-ls.nvim', config = [[require('config.null-ls')]] }
 
     -- Completions engine
     use { 'ms-jpq/coq_nvim', branch = 'coq', config = [[require('config.coq')]] }
     -- Signature window
     use 'ray-x/lsp_signature.nvim'
 
-    -- lightbulb on code actions
-    -- TODO: fix integration with the gutter
-    -- use { 
-        -- 'kosayoda/nvim-lightbulb',
-        -- config = function()
-            -- vim.cmd [[ autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb{sign={enabled=true,priority=11}} ]]
-        -- end
-    -- }
-    -- better code actions menu
-    -- note that the config is changed in config.nvim-lsp
+    -- lightbulb on code actions; enabled in config.nvim-lsp
+    use 'kosayoda/nvim-lightbulb'
+    -- better code actions menu; enabled in config.nvim-lsp
     use 'weilbith/nvim-code-action-menu'
 
-
-
-
     -- Builtin Neovim LSP
-    use { 'neovim/nvim-lspconfig', config = [[require('config.nvim-lsp')]] }
-    -- Easy LSP installer
-    use { 'williamboman/nvim-lsp-installer' }
+    use {
+        'neovim/nvim-lspconfig',
+        requires = { 'williamboman/nvim-lsp-installer' }, -- easy LSP installer
+        config = [[require('config.nvim-lsp')]]
+    }
 
 
 
@@ -124,7 +126,7 @@ return require('packer').startup(function()
     -- use { 'ful1e5/onedark.nvim', config = [[require('config.onedark')]] }
     use 'ful1e5/onedark.nvim'
     -- use { "ellisonleao/gruvbox.nvim", config = [[require('config.gruvbox')]] }
-    
+
     -- Language pack for better syntax highlighting
     use 'sheerun/vim-polyglot'
 

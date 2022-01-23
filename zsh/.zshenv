@@ -9,6 +9,10 @@ gacp() {
   git add -A && git commit -a -m $1 && git push
 }
 
+nosync() {
+  mv $1 $1.nosync && ln -s $1.nosync $1
+}
+
 # shorten vagrant stuff
 alias vssh="vagrant ssh"
 alias vupsh="vagrant up && vagrant ssh"
