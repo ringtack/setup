@@ -53,7 +53,6 @@ local coq = require('coq')
 -- handlers to redefine function configs
 local handlers =  {
   ["textDocument/hover"] =  vim.lsp.with(vim.lsp.handlers.hover, {border = "rounded"}),
-  ["textDocument/codeAction"] = vim.lsp.with(vim.lsp.handlers.code_action, nil)
 }
 
 -- helper function to attach signature
@@ -135,7 +134,7 @@ local servers = {
   'sumneko_lua',
   'tsserver'
 }
-local capabilities = vim.lsp.protocol.make_client_capabilities()
+local capabilities = vim.lsp.protocol.make_client_capabilities() -- disable warnings for clangd
 capabilities.offsetEncoding = { "utf-16" }
 
 for _, lsp in ipairs(servers) do

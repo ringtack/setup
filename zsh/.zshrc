@@ -155,4 +155,3 @@ export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export PATH=/usr/local/Cellar/gcc/11.2.0_3/bin:$PATH
 export PATH="/usr/local/opt/llvm/bin:$PATH"
 
-

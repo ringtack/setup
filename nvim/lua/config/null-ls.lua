@@ -6,24 +6,25 @@ local sources = {
   ---- FORMATTING
 
   -- Python
-  null_ls.builtins.formatting.autopep8,
-  null_ls.builtins.formatting.black,
-  null_ls.builtins.formatting.isort,
+  -- null_ls.builtins.formatting.autopep8,     -- python
+  null_ls.builtins.formatting.black,        -- python
+  null_ls.builtins.formatting.isort,        -- python
 
   -- C/C++
-  null_ls.builtins.formatting.clang_format,
+  null_ls.builtins.formatting.clang_format, -- c, cpp, cs, java
 
   -- Golang
-  null_ls.builtins.formatting.gofmt,
-  null_ls.builtins.formatting.goimports,
-  null_ls.builtins.formatting.golines,
+  null_ls.builtins.formatting.gofmt,        -- go
+  null_ls.builtins.formatting.goimports,    -- go
+  null_ls.builtins.formatting.golines,      -- go
 
   -- Rust
-  null_ls.builtins.formatting.rustfmt,
+  null_ls.builtins.formatting.rustfmt,      -- rust
 
   -- JavaScript/TypeScript
-  null_ls.builtins.formatting.eslint_d,
-  null_ls.builtins.formatting.prettierd,
+  null_ls.builtins.formatting.eslint_d,     -- js, jsx, ts, tsx, vue
+  null_ls.builtins.formatting.prettierd,    -- js, jsx, ts, tsx, vue, [s]css, less, html, json,
+                                            -- yaml, markdown, graphql
 
 
 
@@ -31,16 +32,16 @@ local sources = {
   ---- LINTING
 
   -- C/C++
-  null_ls.builtins.diagnostics.cppcheck,
+  null_ls.builtins.diagnostics.cppcheck,    -- c, cpp
 
   -- Golang
-  null_ls.builtins.diagnostics.staticcheck,
+  null_ls.builtins.diagnostics.staticcheck, -- go
 
   -- Markdown
-  null_ls.builtins.diagnostics.markdownlint,
+  null_ls.builtins.diagnostics.markdownlint,-- markdown
   -- and TeX
-  null_ls.builtins.diagnostics.proselint,
-  null_ls.builtins.diagnostics.write_good,
+  null_ls.builtins.diagnostics.proselint,   -- markdown, tex
+  null_ls.builtins.diagnostics.write_good,  -- markdown, tex
 }
 
 

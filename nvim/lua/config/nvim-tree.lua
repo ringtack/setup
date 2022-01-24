@@ -12,9 +12,9 @@ map('n', '<C-n>', ':NvimTreeToggle <CR>', { noremap = true, silent = true})
 
 -- Change highlights
 cmd([[
-hi NvimTreeFolderName guifg=cyan
-hi NvimTreeFolderIcon guifg=cyan
-hi NvimTreeOpenedFolderName guifg=cyan
+hi NvimTreeFolderName guifg=#61afef
+hi NvimTreeFolderIcon guifg=#61afef
+hi NvimTreeOpenedFolderName guifg=#61afef
 ]])
 
 -- disable statusline in NvimTree
