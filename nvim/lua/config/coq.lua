@@ -1,7 +1,7 @@
 local g = vim.g
+-- SYNTAX: map('<mode>', '<key sequence>', '<cmd to execute>', '<opts>')
+local map = vim.api.nvim_set_keymap
 
-vim.cmd [[ autocmd VimEnter * ++nested COQnow -s ]]
-vim.cmd [[ ino <silent><expr> <CR>    pumvisible() ? (complete_info().selected == -1 ? "\<C-e><CR>" : "\<C-y>") : "\<CR>" ]]
 
 -- autostart coq
 g.coq_settings = {
@@ -40,4 +40,13 @@ g.coq_settings = {
             weight_adjust = 0.4, -- prioritize tags the most; most informative
         },
     },
+    -- disable <C-K> keymaps
+    keymap = {
+        jump_to_mark = "",
+        bigger_preview = "",
+        manual_complete = "",
+    },
 }
+
+vim.cmd [[ autocmd VimEnter * ++nested COQnow -s ]]
+vim.cmd [[ ino <silent><expr> <CR>    pumvisible() ? (complete_info().selected == -1 ? "\<C-e><CR>" : "\<C-y>") : "\<CR>" ]]

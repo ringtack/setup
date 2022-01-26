@@ -15,7 +15,7 @@ g.mapleader = ','
 g.maplocalleader = ','
 
 -- allow easy split window creation
-options = { noremap = true, silent = true }         -- mapping options
+local options = { noremap = true, silent = true }         -- mapping options
 map('n', '<Leader>d', ':sp<CR>', options)   -- horizontal split window creation
 map('n', '<Leader>r', ':vsp<CR>', options)  -- vertical split window creation
 -- simplify window navigation

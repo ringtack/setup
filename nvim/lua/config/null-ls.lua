@@ -32,7 +32,7 @@ local sources = {
   ---- LINTING
 
   -- C/C++
-  null_ls.builtins.diagnostics.cppcheck,    -- c, cpp
+  -- null_ls.builtins.diagnostics.cppcheck,    -- c, cpp
 
   -- Golang
   null_ls.builtins.diagnostics.staticcheck, -- go
@@ -40,8 +40,8 @@ local sources = {
   -- Markdown
   null_ls.builtins.diagnostics.markdownlint,-- markdown
   -- and TeX
-  null_ls.builtins.diagnostics.proselint,   -- markdown, tex
-  null_ls.builtins.diagnostics.write_good,  -- markdown, tex
+  -- null_ls.builtins.diagnostics.proselint,   -- markdown, tex
+  -- null_ls.builtins.diagnostics.write_good,  -- markdown, tex
 }
 
 
@@ -54,7 +54,7 @@ null_ls.setup({
             vim.cmd([[
             augroup LspFormatting
                 autocmd! * <buffer>
-                autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting()
+                autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()
             augroup END
             ]])
         end
