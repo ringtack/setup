@@ -42,6 +42,9 @@ local sources = {
   -- and TeX
   -- null_ls.builtins.diagnostics.proselint,   -- markdown, tex
   -- null_ls.builtins.diagnostics.write_good,  -- markdown, tex
+
+  -- Bash
+  null_ls.builtins.diagnostics.shellcheck,
 }
 
 

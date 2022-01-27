@@ -62,7 +62,7 @@ set smartcase
 
 " Highlight search results
 set hlsearch
-hi Search ctermbg=0x545C58
+hi Search ctermbg=darkgray
 
 " Enable searching as you type, rather than waiting till you press enter.
 set incsearch
@@ -78,7 +78,7 @@ set textwidth=100
 
 " Create a vertical column at 100
 set colorcolumn=100
-hi ColorColumn ctermbg=0x545C58
+hi ColorColumn ctermbg=darkgray
 
 
 " Change the cursor shape
@@ -152,7 +152,7 @@ call plug#end()
 filetype plugin indent on
 
 " activates syntax highlighting among other things
-syntax enable
+syntax on
 
 
 
