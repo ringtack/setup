@@ -19,6 +19,8 @@ alias vupsh="vagrant up && vagrant ssh"
 
 # migrate from vim -> neovim
 alias vim="nvim"
+# keep old vim for TeX [TODO: migrate over]
+alias tvim="/usr/local/bin/vim"
 
 # fzf default 25% height
 alias fzf="fzf --height=25%"

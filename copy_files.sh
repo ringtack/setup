@@ -69,7 +69,8 @@ cp -aRf "${VIM_DIR}/UltiSnips/." UltiSnips/
 #### Vim
 
 [[ -d vim ]] || mkdir vim
-cp -af "${HOME}/.vimrc" ./vim/
+cp -af ${HOME}/.vimrc* ./vim/
+# cp -af "${HOME}/.vimrc" ./vim/
 cp -af "${VIM_DIR}/coc-settings.json" ./vim/
 
 
