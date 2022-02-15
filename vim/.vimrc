@@ -100,6 +100,25 @@ set noerrorbells visualbell t_vb=
 nnoremap <expr> k (v:count > 10 ? "m'" . v:count : '') . 'gk'
 nnoremap <expr> j (v:count > 10 ? "m'" . v:count : '') . 'gj'
 
+" Allow switching without writing to buffer
+set hidden 
+" Buffer navigation mappings
+nnoremap <leader><Esc> :bd<CR>
+nnoremap <leader>[ :bp<CR>
+nnoremap <leader>] :bn<CR>
+
+
+
+" allow easy split creation
+nnoremap <leader>d : sp<CR>
+nnoremap <leader>r : vsp<CR>
+
+" allow easy split navigation
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
 
 
 
@@ -139,8 +158,9 @@ Plug 'yggdroot/indentline'
 " Easier commenting
 Plug 'preservim/nerdcommenter'
 
-" light statusline
-Plug 'itchyny/lightline.vim'
+" airline
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 
 call plug#end()
 
@@ -199,6 +219,7 @@ let g:vimtex_syntax_enabled=1
 
 " disable concealing LaTeX symbols; don't like it right now
 " au Filetype tex setl conceallevel=0
+set conceallevel=2
 let g:tex_conceal='abdmg'
 let g:tex_superscripts= "[0-9a-zA-W.,:;+-<>/()=]"
 let g:tex_subscripts= "[0-9aehijklmnoprstuvx,+-/().]"
@@ -261,6 +282,25 @@ let g:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', "`":"`", '"""':'""
 " let g:AutoPairsShortcutFastWrap='<leader>w'
 " imap <leader>w: <M-e>
 
+
+
+
+" AIRLINE CONFIG
+" Tell airline we installed a patched font so it displays correctly
+let g:airline_powerline_fonts = 1
+
+" Setup theme
+let g:airline_theme='solarized'
+let g:airline_solarized_bg='dark'
+
+" use airline's tabline too
+let g:airline#extensions#tabline#enabled = 1
+
+" remove separators for empty sections
+let g:airline_skip_empty_sections = 1
+
+" disable spell detection
+let g:airline_detect_spell=0
 
 
 

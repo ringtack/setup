@@ -11,7 +11,9 @@ local sources = {
   null_ls.builtins.formatting.isort,        -- python
 
   -- C/C++
-  null_ls.builtins.formatting.clang_format, -- c, cpp, cs, java
+  null_ls.builtins.formatting.clang_format.with({
+      extra_args = {"-style=file"}
+    }), -- c, cpp, cs, java
 
   -- Golang
   null_ls.builtins.formatting.gofmt,        -- go
@@ -38,7 +40,10 @@ local sources = {
   null_ls.builtins.diagnostics.staticcheck, -- go
 
   -- Markdown
-  null_ls.builtins.diagnostics.markdownlint,-- markdown
+  null_ls.builtins.diagnostics.markdownlint.with({  -- markdown
+    extra_args = {"-r", "~/.markdownlint.yaml"},
+  }),
+
   -- and TeX
   -- null_ls.builtins.diagnostics.proselint,   -- markdown, tex
   -- null_ls.builtins.diagnostics.write_good,  -- markdown, tex

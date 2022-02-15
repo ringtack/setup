@@ -143,22 +143,23 @@ local on_attach = function(client, bufnr)
 end
 
 local servers = {
-  'bashls',
-  'clangd',
-  'eslint',
-  'gopls',
-  'pyright',
-  'jedi_language_server',
-  'rust_analyzer',
-  'sumneko_lua',
-  'tsserver'
+  'bashls',               -- Bash
+  'clangd',               -- C/C++
+  'eslint',               -- JS[X], TS[X], Vue
+  'gopls',                -- Go
+  'jedi_language_server', -- Python
+  'pyright',              -- Python
+  'rust_analyzer',        -- Rust
+  'sumneko_lua',          -- Lua
+  'tsserver'              -- JS[X], TS[X]
 }
+
 local capabilities = vim.lsp.protocol.make_client_capabilities() -- disable warnings for clangd
 capabilities.offsetEncoding = { "utf-16" }
 
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup({
-  -- nvim_lsp[lsp].setup(require('coq').lsp_ensure_capabilities({
+  -- nvim_lsp[lsp].setup(coq.lsp_ensure_capabilities({
     on_attach = on_attach,
     handlers = handlers,
     capabilities = capabilities,

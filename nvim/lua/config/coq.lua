@@ -5,7 +5,7 @@ local map = vim.api.nvim_set_keymap
 
 -- autostart coq
 g.coq_settings = {
-    auto_start = true,
+    auto_start = 'shut-up',
     -- limits = {
         -- completion_auto_timeout = 0.2,
     -- },

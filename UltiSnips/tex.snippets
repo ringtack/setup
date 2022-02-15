@@ -118,6 +118,7 @@ $0
 endsnippet
 
 
+priority 1000
 snippet soln "make solution" bA
 \begin{solution}
 	$0
@@ -237,8 +238,8 @@ endsnippet
 
 snippet dm "Math" wA
 \[
-${1:${VISUAL}}
-.\] $0
+${1:${VISUAL}},
+\] $0
 endsnippet
 
 snippet ali "Align" bA
@@ -522,21 +523,21 @@ endsnippet
 
 context "math()"
 snippet '(?<!\\)(sin|cos|tan|arcsin|arccos|arctan|cot|csc|sec|arccot|arccsc|arcsec)' "trig" rwA
-\\`!p snip.rv = match.group(1)`{$1}$0
+\\`!p snip.rv = match.group(1)`{\\left($1\\right)}$0
 endsnippet
 
 context "math()"
 snippet '(?<!\\)(ln|log|exp|star|perp|gcd|lcm|mod|Mod)' "misc functions" rwA
-\\`!p snip.rv = match.group(1)`{$1}$0
+\\`!p snip.rv = match.group(1)`{\\left($1\\right)}$0
 endsnippet
 
 context "math()"
-snippet '(?<!\\)(Hom|End|Gal|Aut|min|max|image|Var|Cov)' "defined operators" rwA
-\\`!p snip.rv = match.group(1)`
+snippet '(?<!\\)(Hom|End|Gal|Aut|min|max|image)' "defined operators" rwA
+\\`!p snip.rv = match.group(1)`{\\left($1\\right)}$0
 endsnippet
 
 context "math()"
-snippet '(?<!\\)(alpha|beta|delta|gamma|omega|mu|pi|phi|varphi|rho|sigma|tau|Theta|theta|zeta)' "greek" rwA
+snippet '(?<!\\)(alpha|beta|delta|omega|nu|mu|pi|phi|varphi|rho|sigma|tau|theta|zeta)' "greek" rwA
 \\`!p snip.rv = match.group(1)`
 endsnippet
 
@@ -751,7 +752,7 @@ snippet "([a-zA-Z])bar" "bar" riA
 \overline{`!p snip.rv=match.group(1)`}
 endsnippet
 
-priority 10
+priority 101
 context "math()"
 snippet "hat" "hat" riA
 \hat{$1}$0
@@ -980,16 +981,31 @@ endsnippet
 # $`!p snip.rv = match.group(1)`$-Sylow subgroup
 # endsnippet
 
-# context "math()"
-# snippet '([A-Z])bot' "orthogonal complement" rwA
-# `!p snip.rv = match.group(1)`^{\\bot}
-# endsnippet
+context "math()"
+snippet bot "orthogonal complement" iA
+^\\bot 
+endsnippet
 
 # priority 10000
 # context "math()"
 # snippet '([A-Za-z0-9]{1,3})C([A-Za-z0-9]{1,3})' "Binomial Choose" rwA
 # `!p snip.rv = "\\binom{" + match.group(1) + "}{" + match.group(2) + "}"`
 # endsnippet
+
+
+######################
+#### Stats stuff  ####
+######################
+
+context "math()"
+snippet '(?<!\\)(bias|se|Var|Corr|Cov)' "stats" rwA
+\\`!p snip.rv = match.group(1)`{$1}$0
+endsnippet
+
+context "math()"
+snippet '(?<!\\)(chi|Gamma|gamma|mse)' "greek" rwA
+\\`!p snip.rv = match.group(1)`
+endsnippet
 
 
 ######################
