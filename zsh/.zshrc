@@ -149,6 +149,9 @@ export GEM_HOME="$HOME/.gem"
 # Add Rust environment
 source "$HOME/.cargo/env"
 
+# TEST
+export PATH="$PATH:/Users/ringtack/.local/share/nvim/lsp_servers/rust"
+
 # Configure gcc to latest versions
 export PATH=/usr/local/Cellar/gcc/11.2.0_3/bin:$PATH
 # Include libraries for llvm suite

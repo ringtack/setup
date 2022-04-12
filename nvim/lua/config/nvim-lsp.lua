@@ -143,13 +143,13 @@ local on_attach = function(client, bufnr)
 end
 
 local servers = {
+  'asm_lsp',              -- Assembly
   'bashls',               -- Bash
   'clangd',               -- C/C++
   'eslint',               -- JS[X], TS[X], Vue
   'gopls',                -- Go
   'jedi_language_server', -- Python
   'pyright',              -- Python
-  'rust_analyzer',        -- Rust
   'sumneko_lua',          -- Lua
   'tsserver'              -- JS[X], TS[X]
 }
@@ -169,3 +169,30 @@ for _, lsp in ipairs(servers) do
   -- }))
   })
 end
+
+-- additional rust setup
+nvim_lsp.rust_analyzer.setup({
+    on_attach = on_attach,
+    handlers = handlers,
+    capabilities = capabilities,
+    flags = {
+      debounce_text_changes = 150,
+    },
+    settings = {
+        ["rust-analyzer"] = {
+            assist = {
+                importGranularity = "module",
+                importPrefix = "by_self",
+            },
+            cargo = {
+                loadOutDirsFromCheck = true
+            },
+            procMacro = {
+                enable = true
+            },
+            checkOnSave = {
+                command = "clippy"
+              },
+        }
+    }
+})

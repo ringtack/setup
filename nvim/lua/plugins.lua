@@ -57,11 +57,12 @@ return require('packer').startup(function()
         'nvim-telescope/telescope.nvim',
         requires = {
             {'nvim-lua/plenary.nvim'},
+            -- {'nvim-telescope/telescope-ui-select.nvim'},
             { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
         },
         config = [[require('config.telescope')]],
-
     }
+
     -- file explorer
     use {
         'kyazdani42/nvim-tree.lua',
@@ -75,6 +76,9 @@ return require('packer').startup(function()
     -- easily replace word variants
     --  TODO: figure out how this works lol
     use 'tpope/vim-abolish'
+
+    -- time tracker
+    use 'wakatime/vim-wakatime'
 
 
 
@@ -103,6 +107,19 @@ return require('packer').startup(function()
 
 
 
+    ---- Languages
+
+    -- Rust support
+    -- use {
+        -- 'simrat39/rust-tools.nvim',
+        -- ft = 'rust',
+        -- config = function() require('rust-tools').setup({}) end
+    -- }
+
+
+
+
+
     ---- GIT SUPPORT
     -- blamer utility
     use {
@@ -126,6 +143,7 @@ return require('packer').startup(function()
     -- use { 'ful1e5/onedark.nvim', config = [[require('config.onedark')]] }
     use 'ful1e5/onedark.nvim'
     -- use { "ellisonleao/gruvbox.nvim", config = [[require('config.gruvbox')]] }
+    -- use 'sainnhe/everforest'
 
     -- Language pack for better syntax highlighting
     use 'sheerun/vim-polyglot'

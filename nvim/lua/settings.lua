@@ -45,6 +45,8 @@ o.cursorlineopt = 'screenline,number'
 vim.cmd('set termguicolors')
 -- set colorscheme to OneDark
 vim.cmd('colorscheme onedark')
+-- vim.cmd('set background=dark')
+-- vim.cmd('colorscheme everforest')
 
 -- change search highlight
 cmd('hi Search guifg=bg guibg=Gray')

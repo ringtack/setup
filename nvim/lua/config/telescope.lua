@@ -9,6 +9,7 @@ map('n', '<leader>lg', ':Telescope live_grep<CR>', options)
 local telescope = require('telescope')
 
 telescope.load_extension('fzf')
+-- telescope.load_extension('ui-select')
 
 telescope.setup({
   defaults = {
@@ -16,5 +17,12 @@ telescope.setup({
       preview_width = 0.6
     },
   },
+  -- extensions = {
+    -- ["ui-select"] = {
+      -- require("telescope.themes").get_dropdown {
+        -- -- even more opts
+      -- }
+    -- }
+  -- }
 })
 

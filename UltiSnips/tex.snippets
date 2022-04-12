@@ -537,7 +537,7 @@ snippet '(?<!\\)(Hom|End|Gal|Aut|min|max|image)' "defined operators" rwA
 endsnippet
 
 context "math()"
-snippet '(?<!\\)(alpha|beta|delta|omega|nu|mu|pi|phi|varphi|rho|sigma|tau|theta|zeta)' "greek" rwA
+snippet '(?<!\\)(alpha|beta|delta|omega|nu|mu|pi|phi|varphi|psi|rho|sigma|tau|theta|zeta)' "greek" rwA
 \\`!p snip.rv = match.group(1)`
 endsnippet
 
@@ -574,6 +574,11 @@ snippet !> "mapsto" iA
 endsnippet
 
 context "math()"
+snippet ~> "leadsto" iA
+\leadsto 
+endsnippet
+
+context "math()"
 snippet invs "inverse" iA
 ^{-1}
 endsnippet
@@ -599,6 +604,10 @@ endsnippet
 
 snippet ~~ "~" iA
 \sim 
+endsnippet
+
+snippet ~= "approx" iA
+\approx
 endsnippet
 
 context "math()"
@@ -662,9 +671,9 @@ snippet QQ "Q" iA
 \Q
 endsnippet
 
-snippet II "I" iA
-\I
-endsnippet
+# snippet II "I" iA
+# \I
+# endsnippet
 
 snippet ZZ "Z" iA
 \Z
@@ -717,6 +726,7 @@ snippet tt "text" iA
 \text{$1}$0
 endsnippet
 
+priority 101
 context "math()"
 snippet case "cases" wA
 \begin{cases}
@@ -764,10 +774,22 @@ snippet "([a-zA-Z])hat" "hat" riA
 \hat{`!p snip.rv=match.group(1)`}
 endsnippet
 
+priority 101
+context "math()"
+snippet "tilde" "tilde" riA
+\tilde{$1}$0
+endsnippet
+
 priority 100
 context "math()"
 snippet "([A-Za-z0-9])vec" "vec" riA
 \vec{`!p snip.rv=match.group(1)`}
+endsnippet
+
+priority 100
+context "math()"
+snippet "([A-Za-z01])bf" "bold" riA
+\mathbf{`!p snip.rv=match.group(1)`}
 endsnippet
 
 priority 10
@@ -952,6 +974,12 @@ snippet epsi "epsilon" iA
 \varepsilon
 endsnippet
 
+priority 201
+context "math()"
+snippet varthet "theta" iA
+\vartheta 
+endsnippet
+
 context "math()"
 snippet abs "absolute value" iA
 \left| $1 \right| $0
@@ -998,12 +1026,12 @@ endsnippet
 ######################
 
 context "math()"
-snippet '(?<!\\)(bias|se|Var|Corr|Cov)' "stats" rwA
+snippet '(?<!\\)(bias|Se|Var|Corr|Cov)' "stats" rwA
 \\`!p snip.rv = match.group(1)`{$1}$0
 endsnippet
 
 context "math()"
-snippet '(?<!\\)(chi|Gamma|gamma|mse)' "greek" rwA
+snippet '(?<!\\)(chi|Theta|Lambda|Sigma|Gamma|gamma|mse)' "greek" rwA
 \\`!p snip.rv = match.group(1)`
 endsnippet
 

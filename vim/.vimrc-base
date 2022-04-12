@@ -1,23 +1,16 @@
-" WELCOME TO VIMRC
+" ~/.vimrc
+"
+" This is your Vim initialization file. It is read on Vim startup.
+"
+" Change this file to customize your Vim settings.
 " 
-" KEEP 10 EMPTY LINES BETWEEN SECTIONS
-" KEEP A SECTION COMMENT FOR EACH SECTION
-"  
-" HOW TO USE:
-" 1. INSTALL VIM (A VERSION THAT SUPPORTS PYTHON)
-" 2. INSTALL VIM-PLUG (see https://github.com/junegunn/vim-plug)
-" 3. INSTALL PLUGINS THROUGH VIM-PLUG (same link as above)
-" 4. LOOK THROUGH THIS FILE AND EACH PLUGIN REPO PAGE TO UNDERSTAND USE CASES
-" (repos are listed after "Plug" and are on GitHub)
+" Vim treats lines beginning with " as comments.
 
 
 
-
-
-
-
-
-" GENERAL SECTION
+" Use Vim settings, rather then Vi settings (much better!).
+" This must be first, because it changes other options as a side effect.
+set nocompatible
 
 " enable clicking and scrolling as expected
 set mouse+=a
@@ -27,7 +20,6 @@ set backspace=indent,eol,start
 
 " set [local]leader key to comma
 let mapleader = ","
-" set localleader key to same key as leader
 let maplocalleader = ","
 
 " set number of visual spaces per tab character
@@ -67,7 +59,7 @@ hi Search ctermbg=darkgray
 " Enable searching as you type, rather than waiting till you press enter.
 set incsearch
 
-" Enable smart indenting 
+" Enable smart indenting
 set si
 
 
@@ -101,7 +93,7 @@ nnoremap <expr> k (v:count > 10 ? "m'" . v:count : '') . 'gk'
 nnoremap <expr> j (v:count > 10 ? "m'" . v:count : '') . 'gj'
 
 " Allow switching without writing to buffer
-set hidden 
+set hidden
 " Buffer navigation mappings
 nnoremap <leader><Esc> :bd<CR>
 nnoremap <leader>[ :bp<CR>
@@ -119,6 +111,9 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
+
+set showcmd            " Show (partial) command in status line.
+set showmatch          " Show matching brackets.
 
 
 
@@ -140,116 +135,53 @@ call plug#begin()
 
 " add functionality to surround highlighted text
 Plug 'tpope/vim-surround'
-"
-" Auto Pairs
-Plug 'jiangmiao/auto-pairs'
-
-" LaTeX support
-Plug 'lervag/vimtex'
-Plug 'KeitaNakamura/tex-conceal.vim', { 'for': 'tex' }
-
-" Snippets plugin
-Plug 'sirver/ultisnips'
-Plug 'honza/vim-snippets'
 
 " Highlight indented lines
 Plug 'yggdroot/indentline'
 
-" Easier commenting
-Plug 'preservim/nerdcommenter'
+" Git & GitHub support
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
 
-" airline
+" Display git changes in files
+Plug 'airblade/vim-gitgutter'
+
+" Change status bar
+" Note: this requires additional Font installation, see
+" https://github.com/vim-airline/vim-airline
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
+" Easier commenting
+Plug 'preservim/nerdcommenter'
+
+" Auto Pairs
+Plug 'jiangmiao/auto-pairs'
+
+" " Async Linting
+" Plug 'dense-analysis/ale'
+
 " OneDark
 Plug 'joshdick/onedark.vim'
+
+" better syntax highlighting
+Plug 'sheerun/vim-polyglot'
 
 call plug#end()
 
 
 
 
-
-" activates filetype detection
+" Activate filetype detection
 filetype plugin indent on
 
-" activates syntax highlighting among other things
+" Add syntax highlighting
 syntax on
-
-" set colorscheme to OneDark
 colorscheme onedark
 
 
 
-" VIM-SURROUND CONFIG
-let g:surround_{char2nr('c')} = "\\\1command\1{\r}"
 
-
-
-
-
-" VIMTEX CONFIG
-
-let g:tex_fast = "bMprs"
-
-let g:tex_flavor='latex'
-
-" set pdf viewer to zathura
-let g:vimtex_view_method='zathura'
-
-" redirect build files to a build directory
-let g:vimtex_compiler_latexmk = {
-            \ 'build_dir' : 'build',
-            \}
-
-" automatically open quickfix window when errors occur, but stop from being the active window
-let g:vimtex_quickfix_mode=2
-
-" automatically close quickfix window after 3 keystrokes
-let g:vimtex_quickfix_autoclose_after_keystrokes=3
-
-" prevent quickfix window from opening when only warnings are present
-let g:vimtex_quickfix_open_on_warning=0
-
-" set Vim filetype to tex
-set ft=tex
-
-" set text encoding to utf8
-set encoding=utf8
-" Enable formatting and syntax highlighting
-let g:vimtex_format_enabled=1 
-let g:vimtex_syntax_enabled=1
-
-" disable concealing LaTeX symbols; don't like it right now
-" au Filetype tex setl conceallevel=0
-set conceallevel=2
-let g:tex_conceal='abdmg'
-let g:tex_superscripts= "[0-9a-zA-W.,:;+-<>/()=]"
-let g:tex_subscripts= "[0-9aehijklmnoprstuvx,+-/().]"
-
-" Latex specification, to prevent sluggish UI
-" au BufNewFile,BufRead *.tex
-    " \ set nocursorline |
-    " \ set nornu |
-    " \ set number |
-    \ let g:loaded_matchparen=1 |
-
-
-
-
-
-" ULTISNIPS CONFIG
-let g:UltiSnipsExpandTrigger = '<tab>'
-let g:UltiSnipsJumpForwardTrigger = '<tab>'
-let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
-let g:UltiSnipsListSnippets = '<leader>ls'
-
-" To use spellcheck: <C-l>
-setlocal spell
-set spelllang=en_us
-inoremap <C-l> <c-g>u<Esc>[s1z=`]a<c-g>u
-hi SpellBad ctermbg=0x765757
 
 
 
@@ -260,10 +192,6 @@ let g:indentLine_enabled=1
 let g:indentLine_conceallevel=2
 let g:indentLine_concealcursor='inc'
 let g:indentLine_char_list=['|', '¦', '┆', '┊']
-
-" Maintain normal conceal levels for other plugins
-let g:indentLine_setConceal=0
-
 
 
 
@@ -281,37 +209,23 @@ let NERDTreeDirArrows = 1
 
 
 
-" AUTO PAIRS
-let g:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', "`":"`", '"""':'"""', "'''":"'''"}
-" let g:AutoPairsShortcutFastWrap='<leader>w'
-" imap <leader>w: <M-e>
-
-
-
-
 " AIRLINE CONFIG
+
 " Tell airline we installed a patched font so it displays correctly
 let g:airline_powerline_fonts = 1
 
 " Setup theme
-let g:airline_theme='solarized'
-let g:airline_solarized_bg='dark'
+let g:airline_theme='distinguished'
 
 " use airline's tabline too
 let g:airline#extensions#tabline#enabled = 1
 
-" remove separators for empty sections
-let g:airline_skip_empty_sections = 1
-
-" disable spell detection
-let g:airline_detect_spell=0
 
 
 
 
-" ================================= "
-" === Base Vim Highlight Groups === "
-" ================================= "
+" Auto Pairs
+let g:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', "`":"`", '"""':'"""', "'''":"'''"}
+let g:AutoPairsShortcutFastWrap='<leader>w'
+" imap <leader>w: <M-e>
 
-" VimTex Conceal highlighting
-autocmd VimEnter * hi Conceal ctermfg=cyan ctermbg=none cterm=bold
