@@ -294,8 +294,7 @@ let g:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', "`":"`", '"""':'""
 let g:airline_powerline_fonts = 1
 
 " Setup theme
-let g:airline_theme='solarized'
-let g:airline_solarized_bg='dark'
+let g:airline_theme='distinguished'
 
 " use airline's tabline too
 let g:airline#extensions#tabline#enabled = 1

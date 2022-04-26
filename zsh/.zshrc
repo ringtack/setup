@@ -165,7 +165,7 @@ export CPPFLAGS="-I/usr/local/opt/llvm/include"
 
 
 
-## ALIASES/FUNCTIONS
+## FUNCTIONS
 # oh-my-zsh recommends alias definitions in ZSH_CUSTOM, apparently?
 # view all aliases with `alias`
 
@@ -184,6 +184,21 @@ gacp() {
 nosync() {
   mv $1 $1.nosync && ln -s $1.nosync $1
 }
+
+# play/pause Spotify
+toggle_song() {
+  osascript -e 'tell application "Spotify" to playpause'
+}
+# go to next/previous song
+next_song() {
+  for i in 1..$1; do osascript -e 'tell application "Spotify" to next track'; done
+}
+prev_song() {
+  for i in 1..$1; do osascript -e 'tell application "Spotify" to previous track'; done
+}
+
+
+## ALIASES
 
 # shorten vagrant stuff
 alias vssh="vagrant ssh"

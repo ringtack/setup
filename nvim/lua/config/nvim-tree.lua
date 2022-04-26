@@ -23,7 +23,6 @@ au BufEnter,BufWinEnter,WinEnter,CmdwinEnter * if bufname('%') == "NvimTree" | s
 ]])
 
 require('nvim-tree').setup {
-    auto_close = true,
     open_on_tab = true,
     update_focused_file = {
         enable = true,
