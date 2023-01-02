@@ -1,11 +1,7 @@
-local g = vim.g
 local cmd = vim.cmd
 -- SYNTAX: map('<mode>', '<key sequence>', '<cmd to execute>', '<opts>')
 local map = vim.api.nvim_set_keymap
 
-g.nvim_tree_highlight_opened_files = 1
-g.nvim_tree_add_trailing = 1
-g.nvim_tree_group_empty = 1
 
 -- Toggle with <C-n>
 map('n', '<C-n>', ':NvimTreeToggle <CR>', { noremap = true, silent = true})
@@ -26,13 +22,22 @@ require('nvim-tree').setup {
     open_on_tab = true,
     update_focused_file = {
         enable = true,
-        updated_cwd = false,
+        update_root = false,
         ignore_list = {},
     },
     view = {
         width = 25,
-        height = 25,
         side = 'left',
-        auto_resize = true,
     },
+    actions = {
+        open_file = {
+            resize_window = true,
+        },
+    },
+    renderer = {
+        highlight_opened_files = "icon",
+        add_trailing = true,
+        group_empty = true,
+    }
 }
+

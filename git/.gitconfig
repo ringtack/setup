@@ -15,7 +15,8 @@
 [core]
 	excludesfile = /Users/ringtack/.gitignore_global
 	pager = delta
-#	editor = code --wait
+    editor = vim
+
 [help]
 	autocorrect = 0
 [merge]
@@ -32,7 +33,7 @@
 [delta]
   features = unobtrusive-line-numbers decorations
   whitespace-error-style = 22 reverse
-  syntax-theme = dracula
+  syntax-theme = TwoDark
   navigate = true
   line-numbers = true
   side-by-side = true

@@ -2,7 +2,7 @@
 local map = vim.api.nvim_set_keymap
 
 require('twilight').setup{
-  context = 16,
+    context = 15,
 }
 
 map('n', '<Leader>tw', ':Twilight<CR>', { noremap = true, silent = true})

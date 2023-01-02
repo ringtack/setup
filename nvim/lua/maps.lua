@@ -1,9 +1,7 @@
 ---- MAPS SECTION ----
 
 -- shorten some commands
-local o = vim.o
 local g = vim.g
-local cmd = vim.cmd
 local nvim_exec = vim.api.nvim_exec
 -- SYNTAX: map('<mode>', '<key sequence>', '<cmd to execute>', '<opts>')
 local map = vim.api.nvim_set_keymap
@@ -27,7 +25,7 @@ map('n', '<C-L>', '<C-W><C-L>', options)    -- right window
 -- simplify buffer navigation and deletion
 map('n', '<Leader>]', ':bnext<CR>', options)
 map('n', '<Leader>[', ':bprev<CR>', options)
-map('n', '<Leader><Esc>', ':bd<CR>', options)
+map('n', '<Leader><Esc>', ':Bdelete<CR>', options)
 
 -- Line transforms with Alt
 map('n', '<A-j>', ':m .+1<CR>==', options)
@@ -44,10 +42,6 @@ nnoremap <expr> k (v:count > 10 ? "m'" . v:count : '') . 'gk'
 nnoremap <expr> j (v:count > 10 ? "m'" . v:count : '') . 'gj'
 ]], false)
 
-
-
-
 -- disable Ex mode, whatever that is
 map('n', 'Q', '<Nop>', {})
-
 

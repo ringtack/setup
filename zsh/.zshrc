@@ -57,12 +57,20 @@ COMPLETION_WAITING_DOTS="true"
 #   - custom plugins found in $ZSH_CUSTOM/plugins/
 # Note: too many plugins slow down shell startup
 plugins=(
-  git
   zsh-autosuggestions
-  # zsh-vi-mode
   zsh-syntax-highlighting
+  # vi-mode
+  copybuffer # <C-o> copies cmd line to clipboard
+
+  git
   macos
-  copybuffer
+
+  fd
+  ripgrep
+  rust # for rustc/rustup/cargo completions
+
+  asdf # don't use enough to warrant rn
+  pip
 )
 
 # Change autosuggestions color for clarity
@@ -103,7 +111,8 @@ prompt_context() {
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
-
+# Change config locations
+export XDG_CONFIG_HOME="$HOME/.config"
 
 
 
@@ -113,7 +122,7 @@ prompt_context() {
 export DBUS_SESSION_BUS_ADDRESS="unix:path=$DBUS_LAUNCHD_SESSION_BUS_SOCKET"
 
 # Enable autojump
-  [ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
+  [ -f /opt/homebrew/etc/profile.d/autojump.sh ] && . /opt/homebrew/etc/profile.d/autojump.sh
 
 # configure shell environment for pyenv
 eval "$(pyenv init --path)"
@@ -134,7 +143,7 @@ export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-11.0.1.jdk/Contents/Home
 
 # Add Racket to environment path
-export PATH=$PATH:/Applications/Racket\ v8.3/bin
+export PATH=$PATH:/Applications/Racket\ v8.6/bin
 
 # Add Go to environment path
 export GOPATH=$HOME/Go
@@ -149,20 +158,21 @@ export GEM_HOME="$HOME/.gem"
 # Add Rust environment
 source "$HOME/.cargo/env"
 
-# TEST
-export PATH="$PATH:/Users/ringtack/.local/share/nvim/lsp_servers/rust"
 
-# Configure gcc to latest versions
-export PATH=/usr/local/Cellar/gcc/11.2.0_3/bin:$PATH
+# Configure gcc/g++ to latest versions
+export PATH="/opt/homebrew/Cellar/gcc/12.2.0/bin:$PATH"
+# make aliases to correct gcc/g++...
+# alias c++=/opt/homebrew/Cellar/gcc/12.2.0/bin/c++-12
+# alias gcc=/opt/homebrew/Cellar/gcc/12.2.0/bin/gcc-12
+# alias g++=/opt/homebrew/Cellar/gcc/12.2.0/bin/g++-12
+
 # Include libraries for llvm suite
 # Put llvm suite at start of path (to use over built-ins)
-export PATH="/usr/local/opt/llvm/bin:$PATH"
+export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 # For compilers to find llvm
-# export LDFLAGS="-L/usr/local/opt/llvm/lib"
-export LDFLAGS="-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib"
-export CPPFLAGS="-I/usr/local/opt/llvm/include"
-
-
+export LDFLAGS="-L/opt/homebrew/opt/llvm/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm/lib/c++"
+# export LDFLAGS="-L/opt/homebrew/opt/llvm/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/llvm/include"
 
 
 ## FUNCTIONS
@@ -173,6 +183,17 @@ export CPPFLAGS="-I/usr/local/opt/llvm/include"
 # kill all processes running on provided port
 killport() {
   lsof -t -i:$1 | xargs -t kill -9
+}
+
+# kill all processes that contain the name
+killproc() {
+  ps -a | grep -v "grep" | grep "$1" | cut -d " " -f1 | xargs -t kill -9
+}
+
+# compile c++ code w/ desired version
+
+cppc() {
+  g++ -std=c++20 -Wall -Wextra -Wno-sign-compare -pthread -O2 $1.cpp -o $1 && ./$1
 }
 
 # shortened add -> commit -> push
@@ -200,6 +221,9 @@ prev_song() {
 
 ## ALIASES
 
+# GitUI shortcut
+alias gi="gitui"
+
 # shorten vagrant stuff
 alias vssh="vagrant ssh"
 alias vupsh="vagrant up && vagrant ssh"
@@ -208,11 +232,15 @@ alias vupsh="vagrant up && vagrant ssh"
 alias vim="nvim"
 
 # keep old vim for TeX [TODO: migrate over to NeoVim]
-alias tvim="~/texterm.sh"
-alias ovim="/usr/local/bin/vim"
+# alias tvim="~/texterm.sh"
+alias ovim="/opt/homebrew/bin/vim"
 
 # fzf default 25% height
 alias fzf="fzf --height=25%"
 
 alias ml-env="source ~/course/stats-ml/bin/activate"
 alias logic-env="source ~/course/csci1710/csci1710_env/bin/activate"
+
+alias cmd="echo hello"
+
+alias ls="exa --group-directories-first --icons --time-style=long-iso --git -h"

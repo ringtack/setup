@@ -2,6 +2,11 @@ local g = vim.g
 -- SYNTAX: map('<mode>', '<key sequence>', '<cmd to execute>', '<opts>')
 local map = vim.api.nvim_set_keymap
 
+-- Helpful key re-maps for Coq
+map('i', '<esc>', [[pumvisible() ? "<c-e><esc>" : "<esc>"]], { expr = true, noremap = true })
+map('i', '<c-c>', [[pumvisible() ? "<c-e><c-c>" : "<c-c>"]], { expr = true, noremap = true })
+map('i', '<tab>', [[pumvisible() ? "<c-n>" : "<tab>"]], { expr = true, noremap = true })
+map('i', '<s-tab>', [[pumvisible() ? "<c-p>" : "<bs>"]], { expr = true, noremap = true })
 
 -- autostart coq
 g.coq_settings = {
@@ -30,7 +35,7 @@ g.coq_settings = {
     },
     clients = {
         snippets = {
-            warn = {}, 
+            warn = {},
         },
         -- tree_sitter = {
             -- weight_adjust = 0.35, -- prioritize TreeSitter a little more
@@ -45,6 +50,7 @@ g.coq_settings = {
         jump_to_mark = "",
         bigger_preview = "",
         manual_complete = "",
+        recommended = false,
     },
 }
 
