@@ -33,21 +33,21 @@ g.coq_settings = {
             mode = "short",
         },
     },
-    clients = {
-        snippets = {
-            warn = {},
-        },
+    -- clients = {
+        -- snippets = {
+            -- warn = {},
+        -- },
         -- tree_sitter = {
             -- weight_adjust = 0.35, -- prioritize TreeSitter a little more
             -- path_sep = "", -- I don't like the symbol
         -- },
-        tags = {
-            weight_adjust = 0.4, -- prioritize tags the most; most informative
-        },
-    },
-    -- disable <C-K> keymaps
+        -- tags = {
+            -- weight_adjust = 0.4, -- prioritize tags the most; most informative
+        -- },
+    -- },
+    -- disable keymaps that mess w/ window navigation
     keymap = {
-        jump_to_mark = "",
+        jump_to_mark = "<c-s>",
         bigger_preview = "",
         manual_complete = "",
         recommended = false,

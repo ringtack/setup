@@ -7,17 +7,17 @@ local map = vim.api.nvim_set_keymap
 require("mason").setup()
 require("mason-lspconfig").setup({
     ensure_installed = {
-        'asm_lsp',              -- Assembly
-        'bashls',               -- Bash
-        'clangd',               -- C/C++
-        'dockerls',             -- Docker
-        'eslint',               -- JS[X], TS[X], Vue
-        'gopls',                -- Go
+        'asm_lsp', -- Assembly
+        'bashls', -- Bash
+        'clangd', -- C/C++
+        'dockerls', -- Docker
+        'eslint', -- JS[X], TS[X], Vue
+        'gopls', -- Go
         'jedi_language_server', -- Python
-        'sumneko_lua',          -- Lua
-        'pyright',              -- Python
-        'rust_analyzer',        -- Rust
-        'tsserver'              -- JS[X], TS[X]
+        'lua_ls', -- Lua
+        'pyright', -- Python
+        'rust_analyzer', -- Rust
+        'tsserver' -- JS[X], TS[X]
     },
 })
 
@@ -52,33 +52,33 @@ o.updatetime = 200
 
 -- Show diagnostics in a pop-up window on hover
 -- _G.LspDiagnosticsPopupHandler = function()
-    -- local current_cursor = vim.api.nvim_win_get_cursor(0)
-    -- local last_popup_cursor = vim.w.lsp_diagnostics_last_cursor or {nil, nil}
+-- local current_cursor = vim.api.nvim_win_get_cursor(0)
+-- local last_popup_cursor = vim.w.lsp_diagnostics_last_cursor or {nil, nil}
 
-    -- -- Show the popup diagnostics window,
-    -- -- but only once for the current cursor location (unless moved afterwards).
-    -- if not (current_cursor[1] == last_popup_cursor[1] and current_cursor[2] == last_popup_cursor[2]) then
-        -- vim.w.lsp_diagnostics_last_cursor = current_cursor
-        -- vim.diagnostic.open_float(0, {scope="cursor"})   -- for neovim 0.6.0+, replaces show_{line,position}_diagnostics
-    -- end
+-- -- Show the popup diagnostics window,
+-- -- but only once for the current cursor location (unless moved afterwards).
+-- if not (current_cursor[1] == last_popup_cursor[1] and current_cursor[2] == last_popup_cursor[2]) then
+-- vim.w.lsp_diagnostics_last_cursor = current_cursor
+-- vim.diagnostic.open_float(0, {scope="cursor"})   -- for neovim 0.6.0+, replaces show_{line,position}_diagnostics
+-- end
 -- end
 
 vim.api.nvim_create_autocmd("CursorHold", {
-  buffer = bufnr,
-  callback = function()
-    local opts = {
-      focusable = false,
-      close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
-      border = 'rounded',
-      source = 'always',
-      prefix = ' ',
-      scope = 'cursor',
-    }
-    vim.diagnostic.open_float(nil, opts)
+    buffer = bufnr,
+    callback = function()
+        local opts = {
+            focusable = false,
+            close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+            border = 'rounded',
+            source = 'always',
+            prefix = ' ',
+            scope = 'cursor',
+        }
+        vim.diagnostic.open_float(nil, opts)
 
-    -- Let the plugin's setup do this instead
-    -- require('nvim-lightbulb').update_lightbulb({ sign = { enabled = true, priority = 12 } })
-  end
+        -- Let the plugin's setup do this instead
+        -- require('nvim-lightbulb').update_lightbulb({ sign = { enabled = true, priority = 12 } })
+    end
 })
 
 
@@ -100,8 +100,8 @@ local nvim_lsp = require('lspconfig')
 local coq = require('coq')
 
 -- handlers to redefine function configs
-local handlers =  {
-    ["textDocument/hover"] =  vim.lsp.with(vim.lsp.handlers.hover, {border = "rounded"}),
+local handlers = {
+    ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" }),
 }
 
 -- helper function to attach signature
@@ -115,10 +115,10 @@ local on_attach_lsp_signature = function(client, bufnr)
         handler_opts = {
             border = "rounded"
         },
-        doc_lines = 2,   -- restrict documentation shown
-        zindex = 50,     -- <=50 so that it does not hide completion preview.
+        doc_lines = 2, -- restrict documentation shown
+        zindex = 50, -- <=50 so that it does not hide completion preview.
         fix_pos = false, -- Let signature window change its position when needed
-        toggle_key = '<A-x>',  -- Press <Alt-x> to toggle signature on and off.
+        toggle_key = '<A-x>', -- Press <Alt-x> to toggle signature on and off.
     })
 end
 
@@ -126,6 +126,7 @@ end
 -- attach only after lsp connects
 local on_attach = function(client, bufnr)
     local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+
     local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
     -- Activate LSP signature on attach.
@@ -160,17 +161,17 @@ local on_attach = function(client, bufnr)
 end
 
 local servers = {
-    'asm_lsp',              -- Assembly
-    'bashls',               -- Bash
+    'asm_lsp', -- Assembly
+    'bashls', -- Bash
     -- 'clangd',               -- C/C++ NOTE: disabled for clangd_extensions.nvim
-    'dockerls',             -- Docker
-    'eslint',               -- JS[X], TS[X], Vue
-    'gopls',                -- Go
+    'dockerls', -- Docker
+    'eslint', -- JS[X], TS[X], Vue
+    'gopls', -- Go
     'jedi_language_server', -- Python
-    'pyright',              -- Python
+    'pyright', -- Python
     -- 'rust_analyzer',        -- Rust NOTE: disabled for rust-tools.nvim
     -- 'sumneko_lua',          -- Lua
-    'tsserver'              -- JS[X], TS[X]
+    'tsserver' -- JS[X], TS[X]
 }
 
 local capabilities = vim.lsp.protocol.make_client_capabilities() -- disable warnings for clangd
@@ -193,7 +194,22 @@ end
 -- require("clangd_extensions").setup({
 require("clangd_extensions").setup({
     server = coq.lsp_ensure_capabilities({
-        on_attach = on_attach,
+        on_attach = function(client, bufnr) -- augment w/ clangd functionality
+            -- get default configs
+            on_attach(client, bufnr)
+
+            -- Attach rust-tools-specific configs
+            local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+
+            -- Activate LSP signature on attach.
+            on_attach_lsp_signature(client, bufnr)
+
+            -- Mappings.
+            local opts = { noremap = true, silent = true }
+            buf_set_keymap('n', '<Leader>ih', '<cmd>ClangdToggleInlayHints<CR>', opts)
+            buf_set_keymap('n', '<Leader>sh', '<cmd>ClangdSwitchSourceHeader<CR>', opts)
+            buf_set_keymap('n', '<Leader>th', '<cmd>ClangdTypeHierarchy<CR>', opts)
+        end,
         handlers = handlers,
         capabilities = capabilities,
         flags = {
@@ -202,6 +218,7 @@ require("clangd_extensions").setup({
     }),
     extensions = {
         inlay_hints = {
+            highlight = 'Conceal',
         },
         ast = {
             role_icons = {
@@ -229,8 +246,7 @@ require("clangd_extensions").setup({
 -- additional rust setup
 local rt = require("rust-tools")
 rt.setup({
-    -- server = coq.lsp_ensure_capabilities({ FIXME: using snippets here causes deadlock :(
-    server = {
+    server = coq.lsp_ensure_capabilities({
         on_attach = function(client, bufnr) -- augment w/ rust-tools functionality
             -- get default configs
             on_attach(client, bufnr)
@@ -273,24 +289,26 @@ rt.setup({
                 },
             }
         }
-    },
-    -- }),
+    }),
     tools = {
         inlay_hints = {
-            max_len_align = true,
+            -- max_len_align = true,
+            -- right_align  = true,
+            -- right_align_padding = 10,
+            highlight = "Conceal", -- TODO: experiment with highlight groups
         },
         hover_actions = {
             auto_focus = false,
         },
         -- crate_graph = {
-            -- backend = "gd",
-            -- output = ".crate_graph",
+        -- backend = "gd",
+        -- output = ".crate_graph",
         -- }
     },
 })
 
 -- additional lua setup
-nvim_lsp.sumneko_lua.setup(coq.lsp_ensure_capabilities({
+nvim_lsp.lua_ls.setup(coq.lsp_ensure_capabilities({
     on_attach = on_attach,
     handlers = handlers,
     capabilities = capabilities,
@@ -305,4 +323,3 @@ nvim_lsp.sumneko_lua.setup(coq.lsp_ensure_capabilities({
         }
     }
 }))
-

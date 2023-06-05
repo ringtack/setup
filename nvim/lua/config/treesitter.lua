@@ -49,10 +49,10 @@ require("nvim-treesitter.configs").setup {
         -- termcolors = {} -- table of colour name strings
     },
     refactor = {
-        -- highlight_definitions = {
-            -- enable = true,
-            -- clear_on_cursor_move = true,
-        -- },
+        highlight_definitions = {
+            enable = true,
+            clear_on_cursor_move = true,
+        },
         -- highlight_current_scope = { enable = true }, -- kinda annoying when it flickers rn
     },
     textobjects = {
@@ -92,14 +92,20 @@ require("nvim-treesitter.configs").setup {
                 ["]]"] = { query = "@class.outer", desc = "Next class start" },
             },
             goto_next_end = {
+                ["]l"] = "@loop.outer", -- going to start of next loop isn't very useful
+                ["]b"] = "@block.outer", -- same as above
                 ["]M"] = "@function.outer",
                 ["]["] = "@class.outer",
             },
             goto_previous_start = {
+                ["[l"] = "@loop.outer", -- same w/ end of previous loop
+                ["[b"] = "@block.outer", -- same as above
                 ["[m"] = "@function.outer",
                 ["[["] = "@class.outer",
             },
             goto_previous_end = {
+                ["[L"] = "@loop.outer",
+                ["[B"] = "@block.outer",
                 ["[M"] = "@function.outer",
                 ["[]"] = "@class.outer",
             },
@@ -107,11 +113,13 @@ require("nvim-treesitter.configs").setup {
     },
 }
 
-vim.o.foldmethod="expr"
-vim.o.foldexpr="nvim_treesitter#foldexpr()"
-vim.o.foldenable = false
+-- vim.o.foldmethod="expr"
+-- vim.o.foldexpr="nvim_treesitter#foldexpr()"
+-- vim.o.foldenable = false
 
 require("treesitter-context").setup({
     enable = true,
+    max_lines = 3,
+    zindex = 100,
     separator = '-',
 })

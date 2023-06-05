@@ -1,6 +1,5 @@
 -- require('kanagawa').setup({})
 -- vim.cmd[[colorscheme kanagawa]]
--- vim.cmd[[colorscheme onedark]]
 
 -- require("onedark").setup({
     -- style = 'dark', -- {'dark', 'darker', 'cool', 'deep', 'warm', 'warmer', 'light'}
@@ -14,9 +13,15 @@
 -- require('onedark').load()
 
 require("onedark").setup({
-    hide_inactive_statusline = true,
+    -- hide_inactive_statusline = true,
 
-    dark_sidebar = false,
-    highlight_linenumber = true,
+    -- dark_sidebar = true,
+    -- highlight_linenumber = true,
+
+    comment_style = "italic",
     function_style = "italic",
 })
+
+vim.cmd[[colorscheme onedark]]
+
+vim.cmd('hi IndentBlanklineContextChar guifg=lightgray')
