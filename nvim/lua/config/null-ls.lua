@@ -57,7 +57,7 @@ local sources = {
     ---- Miscellaneous
 
     -- Gitsigns actions
-    nls.builtins.code_actions.gitsigns,
+    -- nls.builtins.code_actions.gitsigns,
 }
 
 

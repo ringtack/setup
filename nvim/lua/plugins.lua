@@ -62,7 +62,10 @@ return packer.startup(function()
     use 'tpope/vim-surround'
 
     -- Autopairs support
-    use 'jiangmiao/auto-pairs'
+    use {
+        'jiangmiao/auto-pairs',
+        config = get_config('autopairs'),
+    }
 
     -- easier commenting
     use {
@@ -76,6 +79,7 @@ return packer.startup(function()
         config = get_config('treesitter'),
         run = ':TSUpdate',
     }
+
     -- rainbow parentheses
     use { 'p00f/nvim-ts-rainbow' }
     -- better highlighting, refactoring
@@ -87,7 +91,7 @@ return packer.startup(function()
 
 
     -- Easy movement around buffer
-    -- TODO: evaluate Leap at some point, and see which one I like better
+    -- NOTE: evaluate Leap at some point, and see which one I like better
     use {
         'phaazon/hop.nvim',
         branch = 'v2', -- optional but strongly recommended
@@ -155,6 +159,9 @@ return packer.startup(function()
 
     -- Completions engine
     use { 'ms-jpq/coq_nvim', branch = 'coq', config = get_config('coq') }
+    -- w/ snippets
+    use {'ms-jpq/coq.artifacts', branch = 'artifacts'}
+
     -- Signature window
     use 'ray-x/lsp_signature.nvim'
 
@@ -168,13 +175,23 @@ return packer.startup(function()
     -- better code actions menu; enabled in config.nvim-lsp
     use 'weilbith/nvim-code-action-menu'
 
+    -- Package manager for external editor tooling (LSP servers, formatters, linters, etc)
+    use {
+        "williamboman/mason.nvim",
+        tag = '*',
+        requires = {
+            'williamboman/mason-lspconfig.nvim',
+        },
+        run = ":MasonUpdate" -- :MasonUpdate updates registry contents
+    }
+
     -- Builtin Neovim LSP
     use {
         'neovim/nvim-lspconfig',
         requires = {
             'williamboman/mason.nvim',
             'williamboman/mason-lspconfig.nvim',
-        }, -- easy LSP/Linter/etc installer
+        },
         config = get_config('nvim-lsp')
     }
 
@@ -185,8 +202,23 @@ return packer.startup(function()
 
     -- Better clangd integration
     use { 'p00f/clangd_extensions.nvim' }
+
     -- Rust support
     use { 'simrat39/rust-tools.nvim' }
+    -- Crates.io dependency management
+    use {
+        'saecki/crates.nvim',
+        tag = 'v0.3.0',
+        requires = { 'nvim-lua/plenary.nvim' },
+        event = { "BufRead Cargo.toml" },
+        config = get_config('crates'),
+    }
+
+    -- Go support
+    use {
+        'ray-x/go.nvim',
+        config = get_config('go'),
+    }
 
     -- RON support
     use { 'ron-rs/ron.vim' }
@@ -196,26 +228,25 @@ return packer.startup(function()
 
 
     ---- GIT SUPPORT
-    -- blamer utility
+    -- Git gutter view, blamer utility, hunk navigation, diff!
     use {
-        'APZelos/blamer.nvim',
-        config = get_config('blamer'),
-        -- cmd = 'BlamerToggle',
-        -- keys = {'<Leader>', 'b'}
+        'lewis6991/gitsigns.nvim',
+        tag = 'release', -- To use the latest release (do not use this in Neovim nightly or dev builds!)
+        config = get_config('gitsigns'),
     }
 
     -- Git & GitHub support
     use { 'tpope/vim-fugitive', config = get_config('vim-fugitive') }
     use 'tpope/vim-rhubarb'
 
-    -- Display Git changes in gutter
-    use 'airblade/vim-gitgutter'
-
 
 
     ---- VISUAL ENHANCEMENTS
-    -- OneDark colorscheme
-    use 'ful1e5/onedark.nvim'
+    -- Colorscheme!
+    use {
+        'ringtack/onedark.nvim',
+        config = get_config('color')
+    }
 
     -- statusline
     use { 'nvim-lualine/lualine.nvim', config = get_config('lualine') }
@@ -223,7 +254,11 @@ return packer.startup(function()
     use { 'akinsho/bufferline.nvim', config = get_config('bufferline') }
 
     -- highlight indented lines
-    use { 'lukas-reineke/indent-blankline.nvim', config = get_config('indent-blankline') }
+    use {
+        'lukas-reineke/indent-blankline.nvim',
+        after = {'onedark.nvim'},
+        config = get_config('indent-blankline')
+    }
 
     -- better diagnostics/references/qf/loclist interface
     use {
@@ -284,10 +319,10 @@ return packer.startup(function()
     }
 
     -- Support missing highlight colors
-    use {
-        'folke/lsp-colors.nvim',
-        config = get_config('lsp-colors'),
-    }
+    -- use {
+        -- 'folke/lsp-colors.nvim',
+        -- config = require('lsp-colors').setup({}),
+    -- }
 
     -- Colorizer
     use {
