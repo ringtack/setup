@@ -9,7 +9,7 @@ require('gitsigns').setup({
     },
     current_line_blame_opts = {
         virt_text = true,
-        virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
+        virt_text_pos = 'eol',
         delay = 500,
         ignore_whitespace = false,
     },
@@ -23,37 +23,36 @@ require('gitsigns').setup({
             vim.keymap.set(mode, l, r, opts)
         end
 
-        -- Navigation: go to next/previous hunk
+        -- Navigation
         map('n', ']c', function()
             if vim.wo.diff then return ']c' end
             vim.schedule(function() gs.next_hunk() end)
             return '<Ignore>'
-        end, {expr=true})
+        end, { expr = true, desc = 'git: next hunk' })
 
         map('n', '[c', function()
             if vim.wo.diff then return '[c' end
             vim.schedule(function() gs.prev_hunk() end)
             return '<Ignore>'
-        end, {expr=true})
+        end, { expr = true, desc = 'git: previous hunk' })
 
-        -- Actions
-        map('n', '<leader>hs', gs.stage_hunk)
-        map('n', '<leader>hr', gs.reset_hunk)
-        map('v', '<leader>hs', function() gs.stage_hunk {vim.fn.line("."), vim.fn.line("v")} end)
-        map('v', '<leader>hr', function() gs.reset_hunk {vim.fn.line("."), vim.fn.line("v")} end)
-        map('n', '<leader>hS', gs.stage_buffer)
-        map('n', '<leader>hu', gs.undo_stage_hunk)
-        map('n', '<leader>hR', gs.reset_buffer)
-        map('n', '<leader>hp', gs.preview_hunk)
-        -- map('n', '<leader>hb', function() gs.blame_line{full=true} end)
-        map('n', '<leader>hb', gs.toggle_current_line_blame)
-        map('n', '<leader>hl', gs.toggle_linehl)
-        map('n', '<leader>hw', gs.toggle_word_diff)
-        map('n', '<leader>hd', gs.diffthis)
-        map('n', '<leader>hD', function() gs.diffthis('~') end)
-        map('n', '<leader>td', gs.toggle_deleted)
+        -- Hunk actions
+        map('n', '<leader>hs', gs.stage_hunk,                                              { desc = 'git: stage hunk' })
+        map('n', '<leader>hr', gs.reset_hunk,                                              { desc = 'git: reset hunk' })
+        map('v', '<leader>hs', function() gs.stage_hunk { vim.fn.line('.'), vim.fn.line('v') } end, { desc = 'git: stage hunk (visual)' })
+        map('v', '<leader>hr', function() gs.reset_hunk { vim.fn.line('.'), vim.fn.line('v') } end, { desc = 'git: reset hunk (visual)' })
+        map('n', '<leader>hS', gs.stage_buffer,                                            { desc = 'git: stage buffer' })
+        map('n', '<leader>hu', gs.undo_stage_hunk,                                         { desc = 'git: undo stage hunk' })
+        map('n', '<leader>hR', gs.reset_buffer,                                            { desc = 'git: reset buffer' })
+        map('n', '<leader>hp', gs.preview_hunk,                                            { desc = 'git: preview hunk' })
+        map('n', '<leader>hb', gs.toggle_current_line_blame,                               { desc = 'git: toggle line blame' })
+        map('n', '<leader>hl', gs.toggle_linehl,                                           { desc = 'git: toggle line highlight' })
+        map('n', '<leader>hw', gs.toggle_word_diff,                                        { desc = 'git: toggle word diff' })
+        map('n', '<leader>hd', gs.diffthis,                                                { desc = 'git: diff this' })
+        map('n', '<leader>hD', function() gs.diffthis('~') end,                            { desc = 'git: diff against last commit' })
+        map('n', '<leader>td', gs.toggle_deleted,                                          { desc = 'git: toggle deleted lines' })
 
         -- Text object
-        map({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+        map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', { desc = 'git: select hunk' })
     end
 })

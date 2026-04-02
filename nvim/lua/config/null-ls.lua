@@ -20,11 +20,10 @@ local sources = {
     nls.builtins.formatting.goimports, -- go
     nls.builtins.formatting.golines, -- go
 
-    -- Rust
-    nls.builtins.formatting.rustfmt, -- rust
+    -- Rust: rustfmt removed from none-ls; rust_analyzer LSP handles formatting
 
     -- JavaScript/TypeScript
-    nls.builtins.formatting.eslint_d, -- js, jsx, ts, tsx, vue
+    -- eslint_d removed from none-ls; eslint LSP server handles linting
     nls.builtins.formatting.prettierd, -- js[x], ts[x], vue, [s]css, html, json, yaml, md, graphql
 
 
@@ -34,15 +33,16 @@ local sources = {
     nls.builtins.diagnostics.cppcheck.with({ -- c, cpp
         args = { "--std=c++20", "--language=c++" },
     }),
-    nls.builtins.diagnostics.cpplint.with({ -- cpp
-        disabled_filetypes = { "c" },
-    }),
+    -- nls.builtins.diagnostics.cpplint.with({ -- removed from none-ls
+    --     disabled_filetypes = { "c" },
+    -- }),
 
     -- Golang
     -- null_ls.builtins.diagnostics.staticcheck, -- go
 
     -- Markdown
-    nls.builtins.diagnostics.markdownlint.with({ -- markdown
+    nls.builtins.diagnostics.markdownlint.with({
+        condition  = function() return vim.fn.executable("markdownlint") == 1 end,
         extra_args = { "-r", "~/.markdownlint.yaml" },
     }),
 
@@ -50,8 +50,7 @@ local sources = {
     -- null_ls.builtins.diagnostics.proselint,   -- markdown, tex
     -- null_ls.builtins.diagnostics.write_good,  -- markdown, tex
 
-    -- Bash
-    nls.builtins.diagnostics.shellcheck,
+    -- Bash: shellcheck removed from none-ls; bashls uses shellcheck internally instead.
 
 
     ---- Miscellaneous

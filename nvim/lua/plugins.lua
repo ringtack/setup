@@ -1,370 +1,412 @@
----- PLUGINS SECTION ---- We use Packer as our package manager.
+---- PLUGINS SECTION ---- We use lazy.nvim as our package manager.
 
 -- shorten some commands
 local fn = vim.fn
 
-local function get_config(name)
+-- Python host detection with cache.
+--
+-- Problem: exepath() may return a pyenv shim (~/.pyenv/shims/python3). Shims
+-- shell out to pyenv for version resolution (~200-400ms) every time the Python
+-- provider is spawned. We want the real binary path instead.
+--
+-- Strategy:
+--   1. Read a cached real-binary path from stdpath('cache')/python3_host_prog.
+--      If valid, use it immediately (~0.005ms file read).
+--   2. Otherwise fall back to exepath() for this session (~0.07ms), and spawn
+--      `python3 -c "import sys;print(sys.executable)"` asynchronously to
+--      resolve the real path and write it to the cache for next time.
+--
+-- Cache invalidation: delete ~/.cache/nvim/python3_host_prog manually, or it
+-- auto-invalidates when the cached binary no longer exists.
+do
+    local cache_path = vim.fn.stdpath('cache') .. '/python3_host_prog'
+
+    local function set_prog(path)
+        if path and path ~= '' then
+            vim.g.python3_host_prog = path
+        end
+    end
+
+    local function write_cache(path)
+        -- Write with newline so f:read('*l') parses correctly on next session,
+        -- even if two nvim instances race to create the file simultaneously.
+        local f = io.open(cache_path, 'w')
+        if f then f:write(path .. '\n'); f:close() end
+    end
+
+    local function resolve_and_cache(fallback)
+        -- Spawn python3 asynchronously to get the real executable path,
+        -- bypassing any shim wrapper. Writes result to cache for next session.
+        -- NOTE: vim.fn.* must not be called from libuv callbacks; use vim.schedule.
+        local stdout = vim.loop.new_pipe()
+        local chunks = {}
+        vim.loop.spawn('python3', {
+            args  = { '-c', 'import sys; print(sys.executable)' },
+            stdio = { nil, stdout, nil },
+        }, function()
+            local real = table.concat(chunks):gsub('%s+$', '')
+            stdout:close()
+            if real == '' then return end
+            vim.schedule(function()
+                if vim.fn.executable(real) == 1 then
+                    write_cache(real)
+                    -- Upgrade from shim to real binary for this session too
+                    if vim.g.python3_host_prog == fallback then
+                        vim.g.python3_host_prog = real
+                    end
+                end
+            end)
+        end)
+        stdout:read_start(function(_, data)
+            if data then chunks[#chunks + 1] = data end
+        end)
+    end
+
+    -- Fast path: use cached real binary if it still exists
+    local f = io.open(cache_path, 'r')
+    if f then
+        local cached = f:read('*l'); f:close()
+        if cached and cached ~= '' and vim.fn.executable(cached) == 1 then
+            set_prog(cached)
+            -- No need to re-resolve; cache is valid
+        else
+            -- Cache is stale (Python moved/removed); fall back and re-resolve
+            local fallback = vim.fn.exepath('python3')
+            if fallback == '' then fallback = vim.fn.exepath('python') end
+            set_prog(fallback)
+            resolve_and_cache(fallback)
+        end
+    else
+        -- No cache yet: set from PATH now, resolve real path in background
+        local fallback = vim.fn.exepath('python3')
+        if fallback == '' then fallback = vim.fn.exepath('python') end
+        set_prog(fallback)
+        resolve_and_cache(fallback)
+    end
+end
+
+-- helper to load config files
+local function cfg(name)
     return string.format('require("config/%s")', name)
 end
 
--- Bootstrap Packer if not already installed
-local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
-if fn.empty(fn.glob(install_path)) > 0 then
-    packer_bootstrap = fn.system({
-        'git',
-        'clone',
-        '--depth',
-        '1',
-        'https://github.com/wbthomason/packer.nvim',
-        install_path,
+-- Bootstrap lazy.nvim if not already installed
+local lazypath = fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+    fn.system({
+        "git",
+        "clone",
+        "--filter=blob:none",
+        "https://github.com/folke/lazy.nvim.git",
+        "--branch=stable",
+        lazypath,
     })
-    print("Installing packer...")
-    vim.api.nvim_command("packadd packer.nvim")
 end
+vim.opt.rtp:prepend(lazypath)
 
--- manually set python executable for faster load times
--- see https://www.redd.it/r9acxp/
-vim.g.python3_host_prog = fn.expand('~/.pyenv/shims/python')
-
--- Only required if packer is configured as `opt`
--- vim.cmd [[packadd packer.nvim]]
-
--- Run :PackerCompile whenever a configuration is changed
-vim.cmd([[
-    augroup packer_user_config
-        autocmd!
-        autocmd BufWritePost plugins.lua source <afile> | PackerCompile
-    augroup end
-]])
-
-local packer = require('packer')
-
-packer.init({
-    enable = true, -- enable profiling via :PackerCompile profile=true
-    threshold = 0, -- the amount in ms that a plugins load time must be over for it to be included in the profile
-    max_jobs = 20, -- Limit the number of simultaneous jobs. nil means no limit. Set to 20 in order to prevent PackerSync form being "stuck" -> https://github.com/wbthomason/packer.nvim/issues/746
-    display = { -- Have packer use a popup window
-        open_fn = function()
-            return require("packer.util").float({ border = "rounded" })
-        end,
-    },
-})
-
--- install packages
-return packer.startup(function()
-    -- Packer can manage itself
-    use 'wbthomason/packer.nvim'
-
-
+require("lazy").setup({
 
     ---- UTILITIES
+
     -- surround highlighted text
-    use 'tpope/vim-surround'
+    { 'tpope/vim-surround' },
 
     -- Autopairs support
-    use {
+    {
         'jiangmiao/auto-pairs',
-        config = get_config('autopairs'),
-    }
+        config = function() require("config/autopairs") end,
+    },
 
     -- easier commenting
-    use {
+    {
         'preservim/nerdcommenter',
-        config = get_config('nerdcommenter'),
-    }
+        config = function() require("config/nerdcommenter") end,
+    },
 
     -- Better syntax highlighting
-    use {
+    -- Sub-plugins declare nvim-treesitter as THEIR dependency (not the other way)
+    -- so lazy guarantees treesitter is on the rtp before their plugin/ files run.
+    -- nvim-treesitter-refactor is excluded: it requires nvim-treesitter.query which
+    -- was removed from modern nvim-treesitter (moved into vim.treesitter core).
+    {
         'nvim-treesitter/nvim-treesitter',
-        config = get_config('treesitter'),
-        run = ':TSUpdate',
-    }
-
-    -- rainbow parentheses
-    use { 'p00f/nvim-ts-rainbow' }
-    -- better highlighting, refactoring
-    use { 'nvim-treesitter/nvim-treesitter-refactor' }
-    -- better textobject operations
-    use { 'nvim-treesitter/nvim-treesitter-textobjects' }
-    -- function contexts
-    use { 'nvim-treesitter/nvim-treesitter-context' }
-
+        build = ':TSUpdate',
+        lazy = false,
+        config = function() require("config/treesitter") end,
+    },
+    { 'nvim-treesitter/nvim-treesitter-textobjects', dependencies = { 'nvim-treesitter/nvim-treesitter' } },
+    { 'nvim-treesitter/nvim-treesitter-context',     dependencies = { 'nvim-treesitter/nvim-treesitter' } },
+    { 'HiPhish/rainbow-delimiters.nvim',             dependencies = { 'nvim-treesitter/nvim-treesitter' } },
 
     -- Easy movement around buffer
-    -- NOTE: evaluate Leap at some point, and see which one I like better
-    use {
-        'phaazon/hop.nvim',
-        branch = 'v2', -- optional but strongly recommended
-        config = get_config('hop'),
-    }
+    {
+        'smoka7/hop.nvim',
+        config = function() require("config/hop") end,
+    },
 
     -- telescope functionality
-    use {
+    {
         'nvim-telescope/telescope.nvim',
-        requires = {
-            { 'nvim-lua/plenary.nvim' },
+        dependencies = {
+            'nvim-lua/plenary.nvim',
+            { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+            'nvim-telescope/telescope-ui-select.nvim',
+            'nvim-telescope/telescope-file-browser.nvim',
         },
-        config = get_config('telescope'),
-    }
-    use { 'nvim-telescope/telescope-ui-select.nvim' }
-    use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
-    use { 'nvim-telescope/telescope-file-browser.nvim' }
+        config = function() require("config/telescope") end,
+    },
 
     -- file explorer
-    use {
+    -- VeryLazy defers the ~11ms load cost. The keys spec registers <C-n> immediately at
+    -- startup as a lazy stub — independent of VeryLazy — so there is no race condition.
+    {
         'kyazdani42/nvim-tree.lua',
-        requires = { 'kyazdani42/nvim-web-devicons' },
-        config = get_config('nvim-tree'),
-    }
+        event = 'VeryLazy',
+        keys = {
+            { '<C-n>', '<cmd>NvimTreeToggle<CR>', desc = 'tree: toggle file explorer' },
+        },
+        dependencies = { 'kyazdani42/nvim-web-devicons' },
+        config = function() require("config/nvim-tree") end,
+    },
 
     -- symbols outline
-    use { "simrat39/symbols-outline.nvim", config = get_config('symbols-outline') }
+    -- VeryLazy defers load. The keys spec function is called after lazy loads the plugin,
+    -- so 'require("outline")' is safe inside it. It retries up to ~2s for LSP to attach
+    -- before giving up and opening anyway (avoids "No response from provider" on fast open).
+    {
+        'hedyhli/outline.nvim',
+        event = 'VeryLazy',
+        cmd = 'Outline',
+        keys = {
+            { '<leader>so', function()
+                local attempts = 0
+                local function try_open()
+                    attempts = attempts + 1
+                    local clients = vim.lsp.get_clients({ bufnr = 0 })
+                    local ready = false
+                    for _, c in ipairs(clients) do
+                        if c.server_capabilities and c.server_capabilities.documentSymbolProvider then
+                            ready = true
+                            break
+                        end
+                    end
+                    if ready or attempts >= 10 then
+                        vim.cmd('Outline')
+                    else
+                        vim.defer_fn(try_open, 200) -- retry every 200ms, up to 2s total
+                    end
+                end
+                try_open()
+            end, desc = 'outline: toggle symbol tree' },
+        },
+        config = function() require("config/symbols-outline") end,
+    },
 
     -- which-key assistant
-    use {
+    {
         "folke/which-key.nvim",
-        config = get_config("which-key"),
-    }
+        config = function() require("config/which-key") end,
+    },
 
-    use {
+    {
         "akinsho/toggleterm.nvim",
-        tag = '*',
-        config = get_config('toggleterm'),
-    }
-    -- Like VSCode's SSH thing?? 
-    -- use {
-        -- 'chipsenkbeil/distant.nvim',
-        -- config = function()
-            -- require('distant').setup {
-                -- -- 1. Ensures that distant servers terminate with no connections
-                -- -- 2. Provides navigation bindings for remote directories
-                -- -- 3. Provides keybinding to jump into a remote file's parent directory
-                -- ['*'] = require('distant.settings').chip_default()
-            -- }
-        -- end
-    -- }
+        version = "*",
+        keys = { '<C-t>', '<leader>gs', '<leader>tl', '<leader>tv' },
+        config = function() require("config/toggleterm") end,
+    },
 
     -- better buf delete functionality
-    use { 'famiu/bufdelete.nvim' }
+    { 'famiu/bufdelete.nvim' },
 
-    -- time tracker
-    use 'wakatime/vim-wakatime'
 
 
 
     ---- LSP Support (linting, fixing/formatting, autocompletion)
 
     -- Formatting, Linting
-    use { 'jose-elias-alvarez/null-ls.nvim', config = get_config('null-ls') }
+    -- BufReadPost: no point loading LSP tools before a file is open.
+    { 'nvimtools/none-ls.nvim', event = 'BufReadPost', config = function() require("config/null-ls") end },
 
-    -- Completions engine
-    use { 'ms-jpq/coq_nvim', branch = 'coq', config = get_config('coq') }
-    -- w/ snippets
-    use {'ms-jpq/coq.artifacts', branch = 'artifacts'}
+    -- Completion engine (replaces coq.nvim)
+    {
+        'saghen/blink.cmp',
+        version = "*",
+        dependencies = {
+            'rafamadriz/friendly-snippets',
+        },
+        config = function() require("config/blink") end,
+    },
 
     -- Signature window
-    use 'ray-x/lsp_signature.nvim'
+    { 'ray-x/lsp_signature.nvim' },
 
-    -- lightbulb on code actions; enabled in config.nvim-lsp
-    use {
+    -- lightbulb on code actions
+    {
         'kosayoda/nvim-lightbulb',
         config = function()
-            require('nvim-lightbulb').setup({autocmd = {enabled = true}})
+            require('nvim-lightbulb').setup({ autocmd = { enabled = true } })
         end,
-    }
-    -- better code actions menu; enabled in config.nvim-lsp
-    use 'weilbith/nvim-code-action-menu'
+    },
 
-    -- Package manager for external editor tooling (LSP servers, formatters, linters, etc)
-    use {
+    -- Package manager for external editor tooling
+    {
         "williamboman/mason.nvim",
-        tag = '*',
-        requires = {
+        version = "*",
+        build = ":MasonUpdate",
+        dependencies = {
             'williamboman/mason-lspconfig.nvim',
         },
-        run = ":MasonUpdate" -- :MasonUpdate updates registry contents
-    }
+    },
 
     -- Builtin Neovim LSP
-    use {
+    -- BufReadPost: defers mason registry scanning (~17ms) until a real file is opened.
+    -- On first file open there is a brief attach delay; all subsequent files are instant.
+    {
         'neovim/nvim-lspconfig',
-        requires = {
+        event = 'BufReadPost',
+        dependencies = {
             'williamboman/mason.nvim',
             'williamboman/mason-lspconfig.nvim',
+            'saghen/blink.cmp',
         },
-        config = get_config('nvim-lsp')
-    }
+        config = function() require("config/nvim-lsp") end,
+    },
 
 
 
-
-    ---- Languages (configured in config/nvim-lsp.lua)
+    ---- Languages
 
     -- Better clangd integration
-    use { 'p00f/clangd_extensions.nvim' }
+    { 'p00f/clangd_extensions.nvim', ft = { 'c', 'cpp' } },
 
-    -- Rust support
-    use { 'simrat39/rust-tools.nvim' }
+    -- Rust support (replaces simrat39/rust-tools.nvim)
+    {
+        'mrcjkb/rustaceanvim',
+        version = "^5",
+        lazy = false,
+        init = function() require("config/rustaceanvim") end,
+    },
+
     -- Crates.io dependency management
-    use {
+    {
         'saecki/crates.nvim',
-        tag = 'v0.3.0',
-        requires = { 'nvim-lua/plenary.nvim' },
+        dependencies = { 'nvim-lua/plenary.nvim' },
         event = { "BufRead Cargo.toml" },
-        config = get_config('crates'),
-    }
+        config = function() require("config/crates") end,
+    },
 
     -- Go support
-    use {
+    {
         'ray-x/go.nvim',
-        config = get_config('go'),
-    }
+        ft = { 'go' },
+        dependencies = { 'nvim-treesitter/nvim-treesitter' },
+        config = function() require("config/go") end,
+    },
 
     -- RON support
-    use { 'ron-rs/ron.vim' }
-
-
+    { 'ron-rs/ron.vim', ft = { 'ron' } },
 
 
 
     ---- GIT SUPPORT
-    -- Git gutter view, blamer utility, hunk navigation, diff!
-    use {
+
+    -- Git gutter view, blamer utility, hunk navigation, diff
+    {
         'lewis6991/gitsigns.nvim',
-        tag = 'release', -- To use the latest release (do not use this in Neovim nightly or dev builds!)
-        config = get_config('gitsigns'),
-    }
+        config = function() require("config/gitsigns") end,
+    },
 
     -- Git & GitHub support
-    use { 'tpope/vim-fugitive', config = get_config('vim-fugitive') }
-    use 'tpope/vim-rhubarb'
+    {
+        'tpope/vim-fugitive',
+        cmd = { 'Git', 'Gwrite', 'Gread', 'GBrowse' },
+        config = function() require("config/vim-fugitive") end,
+    },
+    { 'tpope/vim-rhubarb', cmd = 'GBrowse' },
 
 
 
     ---- VISUAL ENHANCEMENTS
-    -- Colorscheme!
-    use {
+
+    -- Colorscheme
+    {
         'ringtack/onedark.nvim',
-        config = get_config('color')
-    }
+        priority = 1000,
+        config = function() require("config/color") end,
+    },
 
     -- statusline
-    use { 'nvim-lualine/lualine.nvim', config = get_config('lualine') }
+    { 'nvim-lualine/lualine.nvim', config = function() require("config/lualine") end },
     -- bufferline
-    use { 'akinsho/bufferline.nvim', config = get_config('bufferline') }
+    { 'akinsho/bufferline.nvim', config = function() require("config/bufferline") end },
 
     -- highlight indented lines
-    use {
+    {
         'lukas-reineke/indent-blankline.nvim',
-        after = {'onedark.nvim'},
-        config = get_config('indent-blankline')
-    }
+        dependencies = {
+            'ringtack/onedark.nvim',
+            'HiPhish/rainbow-delimiters.nvim',
+        },
+        config = function() require("config/indent-blankline") end,
+    },
 
     -- better diagnostics/references/qf/loclist interface
-    use {
+    -- VeryLazy defers load; keys spec registers all keymaps immediately at startup as stubs.
+    {
         "folke/trouble.nvim",
-        requires = { "kyazdani42/nvim-web-devicons" },
-        config = get_config("trouble"),
-    }
+        event = 'VeryLazy',
+        cmd = 'Trouble',
+        keys = {
+            { '<leader>xx', '<cmd>Trouble diagnostics toggle<cr>',              desc = 'trouble: toggle diagnostics' },
+            { '<leader>xw', '<cmd>Trouble diagnostics toggle<cr>',              desc = 'trouble: workspace diagnostics' },
+            { '<leader>xd', '<cmd>Trouble diagnostics toggle filter.buf=0<cr>', desc = 'trouble: document diagnostics' },
+            { '<leader>xl', '<cmd>Trouble loclist toggle<cr>',                  desc = 'trouble: location list' },
+            { '<leader>xq', '<cmd>Trouble qflist toggle<cr>',                   desc = 'trouble: quickfix list' },
+        },
+        dependencies = { "kyazdani42/nvim-web-devicons" },
+        config = function() require("config/trouble") end,
+    },
 
     -- better messages/cmdline/notifications interface
-    -- TODO: fix popupmenu integration with Coq eventually
-    use({
+    {
         "folke/noice.nvim",
-        config = get_config("noice"),
-        requires = {
+        config = function() require("config/noice") end,
+        dependencies = {
             "MunifTanjim/nui.nvim",
             "rcarriga/nvim-notify",
         }
-    })
-
-    -- better notifications
-    -- use { "rcarriga/nvim-notify" }
+    },
 
     -- dim inactive portions of code
-    use {
+    {
         'folke/twilight.nvim',
-        config = get_config('twilight'),
-        -- cmd = 'Twilight',
-        -- keys = {'<Leader>', 't', 'w'}
-    }
+        cmd = 'Twilight',
+        -- keys entry makes lazy.nvim register a stub keymap so <Leader>tw works before first
+        -- manual :Twilight call (without it the config never runs and the keymap is never set).
+        keys = { '<Leader>tw' },
+        config = function() require("config/twilight") end,
+    },
 
-    -- todo comment highligher
-    use {
+    -- todo comment highlighter
+    {
         'folke/todo-comments.nvim',
-        requires = { 'nvim-lua/plenary.nvim' },
-        config = get_config('todo-comments')
-    }
+        dependencies = { 'nvim-lua/plenary.nvim' },
+        config = function() require("config/todo-comments") end,
+    },
 
-    -- notification for LSP progress
-    -- TODO: use Noice for now
-    -- use { 'j-hui/fidget.nvim', config = function() require("fidget").setup({}) end }
-
-    -- better folds
-    -- TODO: figure out how folds work in more detail at some point
-    use {
-        'kevinhwang91/nvim-ufo',
-        config = get_config('ufo'),
-        requires = 'kevinhwang91/promise-async',
-    }
-
-    -- Dim inactive splits
-    use {
-        'sunjon/shade.nvim',
-        config = function()
-            require("shade").setup{
-                keys = { toggle = '<Leader>sh' }, -- need to disable for Mason compatibility
-            }
-        end,
-    }
-
-    -- Support missing highlight colors
-    -- use {
-        -- 'folke/lsp-colors.nvim',
-        -- config = require('lsp-colors').setup({}),
-    -- }
+    -- Markdown renderer (in-buffer preview with hybrid edit mode)
+    {
+        'OXY2DEV/markview.nvim',
+        lazy = false, -- plugin handles its own lazy loading per-buffer
+        config = function() require("config/markview") end,
+    },
 
     -- Colorizer
-    use {
-        'norcalli/nvim-colorizer.lua',
-        config = get_config('nvim-colorizer'),
-    }
+    {
+        'catgoose/nvim-colorizer.lua',
+        config = function() require("config/nvim-colorizer") end,
+    },
 
-
-
-    -- Automatically set up your configuration after cloning packer.nvim
-    -- Put this at the end after all plugins
-    if packer_bootstrap then
-        require('packer').sync()
-    end
-end)
-
-
----- Maybe fix later, probably not though
--- tab out of pairs
--- TODO: fix compatibility with coq :(
--- use {
--- 'abecodes/tabout.nvim',
--- config = get_config('tabout'),
--- requires = {'nvim-treesitter'},
--- after = {'coq_nvim'},
--- }
-
--- easily replace word variants
---  TODO: figure out how this works lol
--- use 'tpope/vim-abolish'
-
--- nvim-autopairs never seems to work w/ <CR> :/
--- use {
--- "windwp/nvim-autopairs",
--- config = get_config('nvim-autopairs'),
--- }
-
--- Other colorschemes, currently I like OneDark the most
--- use { 'ful1e5/onedark.nvim', config = get_config('onedark') }
--- use { "ellisonleao/gruvbox.nvim", config = get_config('gruvbox') }
--- use 'sainnhe/everforest'
-
--- Language pack for better syntax highlighting
--- NOTE: probably don't need with treesitter anymore
--- use 'sheerun/vim-polyglot'
+}, {
+    ui = { border = "rounded" },
+})

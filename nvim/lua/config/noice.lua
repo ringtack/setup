@@ -1,13 +1,15 @@
+-- nvim-notify needs a background colour when the colorscheme doesn't define
+-- NotifyBackground, otherwise it emits a "no background highlight" warning.
+require("notify").setup({
+    background_colour = "#000000",
+})
+
 require("noice").setup({
     routes = {
-        -- NOTE: notifies on stuff like "@recording", "--INSERT--". I don't use
-        -- macros enough rn to warrant this noise
-        -- { 
-            -- view = "notify",
-            -- filter = {
-                -- event = "msg_showmode"
-            -- },
-        -- },
+        { -- shell command output shown as a noice notification
+            filter = { event = "msg_show", kind = "shell_out" },
+            view = "notify",
+        },
         { -- hide "" messages (see "A Guide To Messages" in the Noice wiki for more)
             filter = {
                 event = "msg_show",
@@ -19,7 +21,7 @@ require("noice").setup({
     },
     lsp = {
         signature = {
-            enabled = false, -- disable for compatibility w/ LSPs
+            enabled = true,
         },
         -- override markdown rendering so plugins use Treesitter
         override = {
@@ -28,7 +30,8 @@ require("noice").setup({
         },
     },
     popupmenu = {
-        enabled = false, -- disable for compatibility w/ LSPs
+        enabled = true,
+        backend = "nui",
     },
     cmdline = {
         -- view = "cmdline",
@@ -39,6 +42,6 @@ require("noice").setup({
         command_palette = false, -- position the cmdline and popupmenu together
         long_message_to_split = true, -- long messages will be sent to a split
         inc_rename = false, -- enables an input dialog for inc-rename.nvim
-        lsp_doc_border = false, -- add a border to hover docs and signature help
+        lsp_doc_border = true, -- add a border to hover docs and signature help
     },
 })

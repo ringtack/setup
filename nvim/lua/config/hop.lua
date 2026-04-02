@@ -1,31 +1,24 @@
 local hop = require('hop')
-hop.setup({
-    -- teasing = false,
-})
+hop.setup({})
 
-
-
--- Augment fF/tT functionality
 local directions = require('hop.hint').HintDirection
-local opts = { remap = true, silent = true }
+local o = { remap = true, silent = true }
 
-local fHopChar = function()
+vim.keymap.set('', 'f', function()
     hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true })
-end
-local FHopChar = function()
+end, vim.tbl_extend('force', o, { desc = 'hop: jump forward to char' }))
+
+vim.keymap.set('', 'F', function()
     hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true })
-end
-local tHopChar = function()
+end, vim.tbl_extend('force', o, { desc = 'hop: jump backward to char' }))
+
+vim.keymap.set('', 't', function()
     hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true, hint_offset = -1 })
-end
-local THopChar = function()
+end, vim.tbl_extend('force', o, { desc = 'hop: jump forward before char' }))
+
+vim.keymap.set('', 'T', function()
     hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true, hint_offset = 1 })
-end
+end, vim.tbl_extend('force', o, { desc = 'hop: jump backward before char' }))
 
-vim.keymap.set('', 'f', fHopChar, opts)
-vim.keymap.set('', 'F', FHopChar, opts)
-vim.keymap.set('', 't', tHopChar, opts)
-vim.keymap.set('', 'T', THopChar, opts)
-
--- Set default mappings for HopWord
-vim.keymap.set('', '<leader>w', hop.hint_words, opts)
+vim.keymap.set('', '<leader>w', hop.hint_words,
+    vim.tbl_extend('force', o, { desc = 'hop: jump to word' }))

@@ -1,0 +1,9 @@
+# Claude Code internal files
+.claude/
+nvim/.claude/
+
+# Transient script output
+nvim/setup-output.txt
+
+# Unused legacy snippets
+nvim/coq-user-snippets/

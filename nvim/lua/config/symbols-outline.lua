@@ -1,11 +1,11 @@
--- SYNTAX: map('<mode>', '<key sequence>', '<cmd to execute>', '<opts>')
-local map = vim.api.nvim_set_keymap
+-- Keymap <leader>so defined in plugins.lua keys spec (registered at startup, not on plugin load).
 
--- Toggle with <C-n>
-map('n', '<Leader>so', ':SymbolsOutline <CR>', { noremap = true, silent = true})
-
-require("symbols-outline").setup({
-    width = 20,
-    show_numbers = true,
-    show_relative_numbers = true,
+require("outline").setup({
+    outline_window = {
+        width = 20,
+        show_numbers = true,
+        show_relative_numbers = true,
+        -- Auto-focus the outline when opened; use <C-H> to return to code buffer.
+        focus_on_open = true,
+    },
 })

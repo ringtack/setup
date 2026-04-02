@@ -1,65 +1,46 @@
 ---- GENERAL SECTION ----
 
-
--- shorten some commands
 local o = vim.o
-local wo = vim.wo
-local cmd = vim.cmd
-local nvim_exec = vim.api.nvim_exec
-
 
 -- enable clicking and scrolling as expected
 o.mouse = 'a'
 
 -- set number of visual spaces per tab
-o.tabstop = 4
+o.tabstop    = 4
 o.shiftwidth = 4
--- don't convert tabs to space
-o.expandtab = true
+o.expandtab  = true
 
 -- show relative line number
-o.number = true
+o.number         = true
 o.relativenumber = true
--- set line number colors to black
--- cmd('hi LineNr ctermfg=darkgray')
 
 -- case-insensitive searching unless something is capitalized
 o.ignorecase = true
-o.smartcase = true
+o.smartcase  = true
 
 -- automatic C program indenting
 o.smartindent = true
 
--- Enable softwrapping, and hardwrapping at 100
-o.linebreak = true
-o.textwidth = 100
--- create vertical line at 100
+-- softwrapping + hard wrap at 100 columns
+o.linebreak   = true
+o.textwidth   = 100
 o.colorcolumn = '100'
--- cmd('hi ColorColumn ctermbg=darkgray')
 
 -- highlight current cursor line
-o.cursorline = true
+o.cursorline    = true
 o.cursorlineopt = 'screenline,number'
 
--- enable termguicolors for NvimTree
-vim.cmd('set termguicolors')
--- vim.cmd[[colorscheme onedark]]
+-- enable true-color
+o.termguicolors = true
 
--- change search highlight
-cmd('hi Search guifg=bg guibg=Gray')
-
-
-
-
-
---- shopkeeping stuff
-
--- redraw only when necessary (not in the middle of macros)
--- o.lazyredraw = true
+-- change search highlight to something readable
+vim.api.nvim_set_hl(0, 'Search', { fg = 'bg', bg = 'Gray' })
 
 -- allow hiding buffers with unsaved changes
 o.hidden = true
 
--- prevent shell scripts from executing
+-- prevent shell scripts from executing (modeline exploits etc.)
 o.secure = true
 
+-- disable unused built-in plugins to reclaim startup time
+vim.g.loaded_matchit = 1  -- ~1.8ms; matchit.vim not needed alongside treesitter textobjects

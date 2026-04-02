@@ -22,6 +22,8 @@ require("onedark").setup({
     function_style = "italic",
 })
 
-vim.cmd[[colorscheme onedark]]
+vim.cmd.colorscheme('onedark')
 
-vim.cmd('hi IndentBlanklineContextChar guifg=lightgray')
+-- Inlay hints (rust-analyzer type annotations, parameter names, etc.)
+-- Default 'Conceal' is near-invisible on dark backgrounds; use a readable muted blue-gray.
+vim.api.nvim_set_hl(0, 'LspInlayHint', { link = 'Comment' })

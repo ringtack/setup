@@ -1,5 +1,5 @@
 require("toggleterm").setup({
-    open_mapping = '<c-t>', -- <c-t> to open
+    open_mapping = '<c-t>',
     direction = 'float',
     float_opts = {
         border = 'curved',
@@ -10,12 +10,11 @@ require("toggleterm").setup({
     }
 })
 
--- Maps to send current line/visual selection to toggleterm
-local opts = { noremap = true, silent = true }
-vim.api.nvim_set_keymap("n", "<leader>tl", "<cmd>ToggleTermSendCurrentLine<CR>", opts)
-vim.api.nvim_set_keymap("v", "<leader>tv", "<cmd>ToggleTermSendVisualSelection<CR>", opts)
+local o = { noremap = true, silent = true }
+vim.keymap.set("n", "<leader>tl", "<cmd>ToggleTermSendCurrentLine<CR>",      vim.tbl_extend('force', o, { desc = 'term: send current line' }))
+vim.keymap.set("v", "<leader>tv", "<cmd>ToggleTermSendVisualSelection<CR>",  vim.tbl_extend('force', o, { desc = 'term: send visual selection' }))
 
--- GitUI support
+-- GitUI floating terminal
 local Terminal = require('toggleterm.terminal').Terminal
 local gitui = Terminal:new({
     cmd = "gitui",
@@ -23,20 +22,16 @@ local gitui = Terminal:new({
     direction = "float",
     float_opts = {
         border = "curved",
+        width = function() return vim.o.columns * 0.75 end,
     },
-    -- function to run on opening the terminal
     on_open = function(term)
         vim.cmd("startinsert!")
-        vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", opts)
+        vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", o)
     end,
-    -- function to run on closing the terminal
-    on_close = function(term)
+    on_close = function()
         vim.cmd("startinsert!")
     end,
 })
 
-local gitui_toggle = function()
-    gitui:toggle()
-end
-
-vim.keymap.set("", "<leader>gs", gitui_toggle, opts)
+vim.keymap.set("", "<leader>gs", function() gitui:toggle() end,
+    vim.tbl_extend('force', o, { desc = 'git: open gitui' }))

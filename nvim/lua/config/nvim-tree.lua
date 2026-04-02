@@ -1,25 +1,18 @@
-local cmd = vim.cmd
--- SYNTAX: map('<mode>', '<key sequence>', '<cmd to execute>', '<opts>')
-local map = vim.api.nvim_set_keymap
-
-
--- Toggle with <C-n>
-map('n', '<C-n>', ':NvimTreeToggle <CR>', { noremap = true, silent = true})
+-- Keymap <C-n> defined in plugins.lua keys spec (registered at startup, not on plugin load).
 
 -- Change highlights
-cmd([[
-hi NvimTreeFolderName guifg=#61afef
-hi NvimTreeFolderIcon guifg=#61afef
-hi NvimTreeOpenedFolderName guifg=#61afef
-]])
+vim.api.nvim_set_hl(0, 'NvimTreeFolderName',       { fg = '#61afef' })
+vim.api.nvim_set_hl(0, 'NvimTreeFolderIcon',       { fg = '#61afef' })
+vim.api.nvim_set_hl(0, 'NvimTreeOpenedFolderName', { fg = '#61afef' })
 
--- disable statusline in NvimTree
-cmd([[
-au BufEnter,BufWinEnter,WinEnter,CmdwinEnter * if bufname('%') == "NvimTree" | set laststatus=0 | else | set laststatus=2 | endif
-]])
+-- Disable statusline inside NvimTree
+vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter', 'WinEnter' }, {
+    callback = function()
+        vim.o.laststatus = (vim.fn.bufname('%') == 'NvimTree') and 0 or 2
+    end,
+})
 
 require('nvim-tree').setup {
-    open_on_tab = true,
     update_focused_file = {
         enable = true,
         update_root = false,
@@ -43,4 +36,3 @@ require('nvim-tree').setup {
         group_empty = true,
     }
 }
-
